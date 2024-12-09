@@ -5,13 +5,19 @@
 <!-- PROJECT LOGO -->
 <div align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/1280px-Node.js_logo.svg.png" alt="Logo" height="80">
-  <h3 align="center">Node project template</h3>
+  <h3 align="center">Hexagonal Architecture Course Repository</h3>
 </div>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Node project template to bootstrap other solutions
+This educational project is the practicing part of the Hexagonal Architecture Course from CodelyTV Pro.
+
+The project consists of 2 endpoints:
+- Create a Video (POST)
+- Search for all videos (GET)
+
+The project includes integration and e2e/acceptance tests.
 
 ### Built With
 
@@ -73,7 +79,7 @@ You just need git and node installed in your computer to use this template
 
 Samuel Casanova - [@casanovasamuel](https://twitter.com/casanovasamuel) - samuel.casanova@gmail.com
 
-Project Link: [https://github.com/samuelcasanova/node-template](https://github.com/samuelcasanova/node-template)
+Project Link: [https://github.com/samuelcasanova/node-template](https://github.com/samuelcasanova/hexagonal-architecture-course-codelytv.git)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
