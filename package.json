@@ -37,6 +37,8 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "sequelize": "^6.37.5",
+    "sqlite3": "^5.1.7",
     "supertest": "^7.0.0"
   }
 }
