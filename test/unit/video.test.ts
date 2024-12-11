@@ -4,6 +4,7 @@ import { CreateVideoCommand } from '../../src/video/application/CreateVideoComma
 import { CreateVideoCommandHandler } from '../../src/video/application/CreateVideoCommandHandler'
 import { VideoCreatedEvent } from '../../src/video/domain/VideoCreatedEvent'
 import { Video } from '../../src/video/domain/Video'
+import { SearchAllVideosQueryHandler } from '../../src/video/application/SearchAllVideosQueryHandler'
 
 const videoIdValue = '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
 const videoTitleValue = 'Hello world'
@@ -20,13 +21,6 @@ const mockPublishAll = jest.fn()
 const eventBus: EventBus = {
   publish: jest.fn(),
   publishAll: mockPublishAll
-}
-
-class SearchAllVideosQueryHandler {
-  constructor (private readonly repository: VideoRepository) { }
-  async handle (): Promise<Video[]> {
-    return await this.repository.searchAll()
-  }
 }
 
 describe('Video', () => {
