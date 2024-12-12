@@ -1,5 +1,3 @@
-import { type VideoRepository } from '../../src/video/domain/VideoRepository'
-import { type EventBus } from '../../src/shared/domain/EventBus'
 import { CreateVideoCommand } from '../../src/video/application/CreateVideoCommand'
 import { CreateVideoCommandHandler } from '../../src/video/application/CreateVideoCommandHandler'
 import { VideoCreatedEvent } from '../../src/video/domain/VideoCreatedEvent'
@@ -9,18 +7,14 @@ import { SearchAllVideosQueryHandler } from '../../src/video/application/SearchA
 const videoIdValue = '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
 const videoTitleValue = 'Hello world'
 
-const repository: VideoRepository = {
+const repository = {
   save: jest.fn(),
-  searchAll: jest.fn().mockResolvedValue([
-    Video.fromPrimitives(videoIdValue, videoTitleValue),
-    Video.fromPrimitives(videoIdValue, videoTitleValue)
-  ])
+  searchAll: jest.fn()
 }
 
-const mockPublishAll = jest.fn()
-const eventBus: EventBus = {
+const eventBus = {
   publish: jest.fn(),
-  publishAll: mockPublishAll
+  publishAll: jest.fn()
 }
 
 describe('Video', () => {
@@ -31,13 +25,15 @@ describe('Video', () => {
     await handler.handle(createVideoCommand)
 
     expect(repository.save).toHaveBeenCalled()
-    expect(mockPublishAll.mock.calls[0][0]).toHaveLength(1)
-    expect(mockPublishAll.mock.calls[0][0][0]).toBeInstanceOf(VideoCreatedEvent)
+    expect(eventBus.publishAll.mock.calls[0][0]).toHaveLength(1)
+    expect(eventBus.publishAll.mock.calls[0][0][0]).toBeInstanceOf(VideoCreatedEvent)
   })
   it('should retrieve all stored videos', async () => {
+    (repository.searchAll).mockResolvedValue([Video.fromPrimitives(videoIdValue, videoTitleValue)])
+
     const handler = new SearchAllVideosQueryHandler(repository)
     const videos = await handler.handle()
 
-    expect(videos).toHaveLength(2)
+    expect(videos).toHaveLength(1)
   })
 })
