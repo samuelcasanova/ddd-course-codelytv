@@ -9,6 +9,8 @@ class VideoModel extends Model<InferAttributes<VideoModel>, InferCreationAttribu
 
 export class SQLiteVideoRepository implements VideoRepository {
   private readonly sequelize: Sequelize
+  private static instance: SQLiteVideoRepository | null = null
+
   private constructor () {
     this.sequelize = new Sequelize({
       dialect: 'sqlite',
@@ -41,9 +43,15 @@ export class SQLiteVideoRepository implements VideoRepository {
     await VideoModel.create(video.toPrimitives())
   }
 
+  async deleteAll (): Promise<void> {
+    await VideoModel.destroy({ where: {} })
+  }
+
   static async create (): Promise<SQLiteVideoRepository> {
-    const repository = new SQLiteVideoRepository()
-    await repository.sequelize.sync()
-    return repository
+    if (SQLiteVideoRepository.instance == null) {
+      SQLiteVideoRepository.instance = new SQLiteVideoRepository()
+      await SQLiteVideoRepository.instance.sequelize.sync()
+    }
+    return SQLiteVideoRepository.instance
   }
 }
