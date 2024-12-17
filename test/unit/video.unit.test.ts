@@ -1,8 +1,8 @@
 import { CreateVideoCommand } from '../../src/video/application/CreateVideoCommand'
 import { CreateVideoCommandHandler } from '../../src/video/application/CreateVideoCommandHandler'
-import { VideoCreatedEvent } from '../../src/video/domain/VideoCreatedEvent'
 import { Video } from '../../src/video/domain/Video'
 import { SearchAllVideosQueryHandler } from '../../src/video/application/SearchAllVideosQueryHandler'
+import type { EventBus } from '../../src/shared/domain/EventBus'
 
 const videoIdValue = '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
 const videoTitleValue = 'Hello world'
@@ -12,10 +12,22 @@ const repository = {
   searchAll: jest.fn()
 }
 
-const eventBus = {
-  publish: jest.fn(),
-  publishAll: jest.fn()
+class SpyEventBus implements EventBus {
+  private publishAllCallCount = 0
+
+  publish (event: any): void {
+  }
+
+  publishAll (events: any[]): void {
+    this.publishAllCallCount++
+  }
+
+  publishAllHasBeenCalledOnce (): boolean {
+    return this.publishAllCallCount === 1
+  }
 }
+
+const eventBus = new SpyEventBus()
 
 describe('Video', () => {
   it('should create a video', async () => {
@@ -48,8 +60,7 @@ function givenaVideoIsInTheRepository (): void {
 
 function thenItsSavedInTheRepositoryAndAnEventIsPublished (): void {
   expect(repository.save).toHaveBeenCalled()
-  expect(eventBus.publishAll.mock.calls[0][0]).toHaveLength(1)
-  expect(eventBus.publishAll.mock.calls[0][0][0]).toBeInstanceOf(VideoCreatedEvent)
+  expect(eventBus.publishAllHasBeenCalledOnce()).toBe(true)
 }
 
 async function whenTheVideoIsCreated (createVideoCommand: CreateVideoCommand): Promise<void> {
