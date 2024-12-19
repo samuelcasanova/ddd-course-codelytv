@@ -5,19 +5,19 @@
 <!-- PROJECT LOGO -->
 <div align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/1280px-Node.js_logo.svg.png" alt="Logo" height="80">
-  <h3 align="center">Hexagonal Architecture Course Repository</h3>
+  <h3 align="center">CQRS Course Repository</h3>
 </div>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This educational project is the practicing part of the Hexagonal Architecture Course from CodelyTV Pro.
+This educational project is the practicing part of the CQRS Course from CodelyTV Pro. This project starts from the end of the Hexagonal Architecture course in this repo: https://github.com/samuelcasanova/hexagonal-architecture-course-codelytv.git
 
 The project consists of 2 endpoints:
 - Create a Video (POST)
 - Search for all videos (GET)
 
-The project includes integration and e2e/acceptance tests.
+The project includes unit, integration and e2e/acceptance tests.
 
 ### Built With
 
@@ -40,7 +40,7 @@ You just need git and node installed in your computer to use this template
 
 1. Clone the repo
    ```sh
-   git clone git@github.com:samuelcasanova/node-template.git
+   git clone git@github.com:samuelcasanova/cqrs-course-codelytv.git
    ```
 2. Install dependencies
    ```sh
@@ -79,7 +79,7 @@ You just need git and node installed in your computer to use this template
 
 Samuel Casanova - [@casanovasamuel](https://twitter.com/casanovasamuel) - samuel.casanova@gmail.com
 
-Project Link: [https://github.com/samuelcasanova/node-template](https://github.com/samuelcasanova/hexagonal-architecture-course-codelytv.git)
+Project Link: [https://github.com/samuelcasanova/cqrs-course-codelytv](git@github.com:samuelcasanova/cqrs-course-codelytv.git)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
