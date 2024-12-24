@@ -3,6 +3,8 @@ import { CreateVideoCommandHandler } from '../../src/video/application/CreateVid
 import { Video } from '../../src/video/domain/Video'
 import { SearchAllVideosQueryHandler } from '../../src/video/application/SearchAllVideosQueryHandler'
 import type { EventBus } from '../../src/shared/domain/EventBus'
+import { SearchAllVideosQuery } from '../../src/video/application/SearchAllVideosQuery'
+import type { VideosResponse } from '../../src/video/application/VideosResponse'
 
 const videoIdValue = '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
 const videoTitleValue = 'Hello world'
@@ -38,20 +40,20 @@ describe('Video', () => {
 
   it('should retrieve all stored videos', async () => {
     givenaVideoIsInTheRepository()
-    const videos = await whenaUserSearchsForAllVideos()
-    thenTheyFindTheVideo(videos)
+    const videosResponse = await whenaUserSearchsForAllVideos()
+    thenTheyFindTheVideo(videosResponse)
   })
 })
 
-function thenTheyFindTheVideo (videos: Video[]): void {
+function thenTheyFindTheVideo (videosResponse: VideosResponse): void {
   expect(repository.searchAll).toHaveBeenCalled()
-  expect(videos).toHaveLength(1)
+  expect(videosResponse.videos).toHaveLength(1)
 }
 
-async function whenaUserSearchsForAllVideos (): Promise<Video[]> {
+async function whenaUserSearchsForAllVideos (): Promise<VideosResponse> {
+  const query = new SearchAllVideosQuery()
   const handler = new SearchAllVideosQueryHandler(repository)
-  const videos = await handler.handle()
-  return videos
+  return await handler.ask(query)
 }
 
 function givenaVideoIsInTheRepository (): void {

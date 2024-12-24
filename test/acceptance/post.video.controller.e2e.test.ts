@@ -2,12 +2,12 @@
 import request from 'supertest'
 import type { Express } from 'express'
 import { SQLiteVideoRepository } from '../../src/video/infrastructure/SQLiteVideoRepository'
-import { getApp } from '../../src/shared/infrastructure'
+import { App } from '../../src/shared/infrastructure/app'
 
 let expressApp: Express
 
 beforeAll(async () => {
-  expressApp = (await getApp()).getExpressApp()
+  expressApp = (await App.getInstance()).getExpressApp()
   const repository = await SQLiteVideoRepository.getInstance()
   await repository.deleteAll()
 })

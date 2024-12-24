@@ -2,14 +2,13 @@ import express from 'express'
 import { GetVideoController } from './GetVideoController'
 import { PostVideoController } from './PostVideoController'
 import type { CommandBus } from '../../shared/domain/CommandBus'
-import type { VideoRepository } from '../domain/VideoRepository'
-import type { EventBus } from '../../shared/domain/EventBus'
+import type { QueryBus } from '../../shared/domain/QueryBus'
 
 export class VideoRouter {
-  constructor (private readonly repository: VideoRepository, private readonly commandBus: CommandBus, private readonly eventBus: EventBus) {}
+  constructor (private readonly commandBus: CommandBus, private readonly queryBus: QueryBus) {}
   getRouter (): express.Router {
     const videoRouter = express.Router()
-    const getVideoController = new GetVideoController(this.repository, this.commandBus)
+    const getVideoController = new GetVideoController(this.queryBus)
     const postVideoController = new PostVideoController(this.commandBus)
 
     videoRouter.get('/', getVideoController.handle.bind(getVideoController))

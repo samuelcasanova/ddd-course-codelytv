@@ -1,3 +1,8 @@
+import { randomUUID } from 'crypto'
+
 export class VideoId {
-  constructor (public readonly value: string) { }
+  public readonly value: string
+  constructor (value?: string) {
+    this.value = value ?? randomUUID()
+  }
 }

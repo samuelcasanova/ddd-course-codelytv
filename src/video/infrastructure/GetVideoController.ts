@@ -1,15 +1,15 @@
 import { type Request, type Response } from 'express'
-import { SearchAllVideosQueryHandler } from '../application/SearchAllVideosQueryHandler'
-import type { VideoRepository } from '../domain/VideoRepository'
-import type { CommandBus } from '../../shared/domain/CommandBus'
+import type { QueryBus } from '../../shared/domain/QueryBus'
+import { SearchAllVideosQuery } from '../application/SearchAllVideosQuery'
+import type { VideosResponse } from '../application/VideosResponse'
 
 export class GetVideoController {
-  constructor (private readonly videoRepository: VideoRepository, private readonly commandBus: CommandBus) {}
+  constructor (private readonly queryBus: QueryBus) {}
   async handle (req: Request, res: Response): Promise<void> {
-    const searchAllVideosQueryHandler = new SearchAllVideosQueryHandler(this.videoRepository)
+    const searchAllVideosQuery = new SearchAllVideosQuery()
 
-    const videos = await searchAllVideosQueryHandler.handle()
+    const { videos } = await this.queryBus.ask<VideosResponse>(searchAllVideosQuery)
 
-    res.send(videos.map(video => video.toPrimitives()))
+    res.send(videos)
   }
 }

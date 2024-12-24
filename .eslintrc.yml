@@ -8,6 +8,8 @@ parserOptions:
   sourceType: module
   project:
     - tsconfig.json
-rules: {}
+rules: {
+  '@typescript-eslint/no-extraneous-class': 'off',
+}
 ignorePatterns: ["build"]
     
