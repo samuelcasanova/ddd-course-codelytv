@@ -1,15 +1,19 @@
-import { type App } from 'supertest/types'
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import request from 'supertest'
-import { app } from '../../src/shared/infrastructure/app'
+import type { Express } from 'express'
 import { SQLiteVideoRepository } from '../../src/video/infrastructure/SQLiteVideoRepository'
+import { getApp } from '../../src/shared/infrastructure'
+
+let expressApp: Express
 
 beforeAll(async () => {
-  const repository = await SQLiteVideoRepository.create()
+  expressApp = (await getApp()).getExpressApp()
+  const repository = await SQLiteVideoRepository.getInstance()
   await repository.deleteAll()
 })
 describe('POST /videos', () => {
   it('should create a video', async () => {
-    const response = await request(app as App).post('/api/videos').send({
+    const response = await request(expressApp).post('/api/videos').send({
       id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
       title: 'Hello world'
     })

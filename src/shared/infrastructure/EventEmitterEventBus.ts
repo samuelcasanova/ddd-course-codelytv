@@ -2,11 +2,7 @@ import EventEmitter from 'events'
 import { type Event } from '../domain/Event'
 import { type EventBus } from '../domain/EventBus'
 
-class EventEmitterEventBus implements EventBus {
-  subscribe (arg0: string, arg1: () => void) {
-    throw new Error('Method not implemented.')
-  }
-
+export class EventEmitterEventBus implements EventBus {
   private readonly eventEmitter: EventEmitter = new EventEmitter()
 
   publish (event: Event): void {
@@ -17,5 +13,3 @@ class EventEmitterEventBus implements EventBus {
     events.forEach(event => { this.publish(event) })
   }
 }
-
-export const eventBus = new EventEmitterEventBus()

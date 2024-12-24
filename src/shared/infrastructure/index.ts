@@ -1,6 +1,21 @@
-import { app } from './app'
+import { CreateVideoCommandHandler } from '../../video/application/CreateVideoCommandHandler'
+import { SQLiteVideoRepository } from '../../video/infrastructure/SQLiteVideoRepository'
+import { App } from './app'
+import { EventEmitterEventBus } from './EventEmitterEventBus'
+import { InMemoryCommandBus } from './InMemoryCommandBus'
 
-const port = process.env.PORT ?? 3000
-app.listen(port, () => {
-  console.log(`Http server started and listening on port ${port}`)
-})
+async function startServer (): Promise<void> {
+  const app = await getApp()
+  app.listen(process.env.PORT === undefined ? 3000 : +process.env.PORT)
+}
+
+export async function getApp (): Promise<App> {
+  const eventBus = new EventEmitterEventBus()
+  const videoRepository = await SQLiteVideoRepository.getInstance()
+  const commandBus = new InMemoryCommandBus()
+  commandBus.register(new CreateVideoCommandHandler(videoRepository, eventBus))
+  const app = new App(videoRepository, commandBus, eventBus)
+  return app
+}
+
+startServer().then(() => {}).catch(console.error)

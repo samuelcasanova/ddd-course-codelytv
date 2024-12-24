@@ -47,7 +47,7 @@ export class SQLiteVideoRepository implements VideoRepository {
     await VideoModel.destroy({ where: {} })
   }
 
-  static async create (): Promise<SQLiteVideoRepository> {
+  static async getInstance (): Promise<SQLiteVideoRepository> {
     if (SQLiteVideoRepository.instance == null) {
       SQLiteVideoRepository.instance = new SQLiteVideoRepository()
       await SQLiteVideoRepository.instance.sequelize.sync()

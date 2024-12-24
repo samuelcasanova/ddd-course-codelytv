@@ -4,7 +4,7 @@ import { SQLiteVideoRepository } from '../../src/video/infrastructure/SQLiteVide
 let repository: SQLiteVideoRepository
 
 beforeAll(async () => {
-  repository = await SQLiteVideoRepository.create()
+  repository = await SQLiteVideoRepository.getInstance()
   await (repository as unknown as { sequelize: { truncate: () => Promise<void> } }).sequelize.truncate()
 })
 describe('Video repository integration tests', () => {
