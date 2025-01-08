@@ -1,0 +1,85 @@
+asyncapi: 3.0.0
+info:
+  title: Microservices Course CodelyTV API
+  version: 1.0.0
+  description: API documentation for the Microservices or Event Driven Architecture course by CodelyTV
+defaultContentType: application/json
+servers:
+  production:
+    host: prod.myrabbitcluster.org:5672
+    protocol: amqp
+    description: prod server
+channels:
+  createVideo:
+    address: codelytv.mooc.video.create.operation.v1
+    messages:
+      createVideo:
+        $ref: '#/components/messages/createVideo'
+    description: The video to be created
+  videoCreated:
+    address: codelytv.mooc.video.created.event.v1
+    messages:
+      videoCreated:
+        $ref: '#/components/messages/videoCreated'
+    description: The created video
+operations:
+  createVideo:
+    action: send
+    channel:
+      $ref: '#/channels/createVideo'
+    summary: Creates a video in the system
+    traits:
+      - $ref: '#/components/operationTraits/rabbitmq'
+    messages:
+      - $ref: '#/channels/createVideo/messages/createVideo'
+components:
+  messages:
+    createVideo:
+      name: createVideo
+      title: Create Video
+      summary: Contains the needed information to create a new video
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/createVideoPayload'
+    videoCreated:
+      name: videoCreated
+      title: Video Created
+      summary: Inform about a Video being created
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/videoCreatedPayload'
+  schemas:
+    createVideoPayload:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        title:
+          type: string
+          example: Funny Cat
+    videoCreatedPayload:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+    id:
+      type: string
+      format: uuid
+      description: Entity id
+  messageTraits:
+    commonHeaders:
+      headers:
+        type: object
+        properties:
+          correlationId:
+            type: string
+            example: 3b606039-b982-4ee2-a33b-5421625cd63b
+  operationTraits:
+    rabbitmq:
+      bindings:
+        amqp:
+          ack: true
