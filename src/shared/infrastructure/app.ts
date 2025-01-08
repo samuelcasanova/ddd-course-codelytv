@@ -7,9 +7,9 @@ import type { QueryBus } from '../domain/QueryBus'
 import { CreateVideoCommandHandler } from '../../video/application/CreateVideoCommandHandler'
 import { SearchAllVideosQueryHandler } from '../../video/application/SearchAllVideosQueryHandler'
 import { SQLiteVideoRepository } from '../../video/infrastructure/SQLiteVideoRepository'
-import { EventEmitterEventBus } from './EventEmitterEventBus'
 import { InMemoryCommandBus } from './InMemoryCommandBus'
 import { InMemoryQueryBus } from './InMemoryQueryBus'
+import { FakeRabbitMqEventBus } from './FakeRabbitMqEventBus'
 
 export class App {
   private readonly expressApp: express.Express
@@ -30,7 +30,7 @@ export class App {
     if (App.app !== undefined) {
       return App.app
     }
-    const eventBus = new EventEmitterEventBus()
+    const eventBus = new FakeRabbitMqEventBus()
     const videoRepository = await SQLiteVideoRepository.getInstance()
     const commandBus = new InMemoryCommandBus()
     commandBus.register(new CreateVideoCommandHandler(videoRepository, eventBus))
