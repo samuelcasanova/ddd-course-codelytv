@@ -3,7 +3,14 @@ import { type EventBus } from '../domain/EventBus'
 
 export class FakeRabbitMqEventBus implements EventBus {
   publish (event: Event): void {
-    console.log(`Publishing event ${event.name}:`, JSON.stringify(event, null, 2))
+    const { created, ...data } = event
+    const jsonApiFormattedEvent = {
+      data,
+      meta: {
+        created
+      }
+    }
+    console.log(`Publishing event ${event.name}:`, JSON.stringify(jsonApiFormattedEvent, null, 2))
   }
 
   publishAll (events: Event[]): void {
