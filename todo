@@ -1,5 +1,0 @@
-create a command bus
-move current create video logic to the command bus
----
-create a query bus
-move current search all logic to the query bus
