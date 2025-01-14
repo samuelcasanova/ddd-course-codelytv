@@ -15,16 +15,15 @@ export class VideoReview extends Entity<Id> {
     super(id)
   }
 
-  public static create (videoId: Id, rating: Rating, comment: Comment, id?: Id): VideoReview {
-    const videoReviewId = id ?? new Id()
-    const videoReview = new VideoReview(videoReviewId, videoId, rating, comment)
+  public static create (id: Id, videoId: Id, rating: Rating, comment: Comment): VideoReview {
+    const videoReview = new VideoReview(id, videoId, rating, comment)
     const event = new VideoReviewCreatedEvent(videoReview.toPrimitives())
     videoReview.pushDomainEvent(event)
     return videoReview
   }
 
   public static fromPrimitives (primitives: VideoReviewPrimitives): VideoReview {
-    return VideoReview.create(new Id(primitives.videoId), new Rating(primitives.rating), new Comment(primitives.comment), new Id(primitives.id))
+    return VideoReview.create(new Id(primitives.id), new Id(primitives.videoId), new Rating(primitives.rating), new Comment(primitives.comment))
   }
 
   public toPrimitives (): VideoReviewPrimitives {
