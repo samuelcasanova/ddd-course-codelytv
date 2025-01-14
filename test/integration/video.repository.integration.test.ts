@@ -1,5 +1,5 @@
-import { Video } from '../../src/video/domain/Video'
-import { SQLiteVideoRepository } from '../../src/video/infrastructure/SQLiteVideoRepository'
+import { Video } from '../../src/contexts/courses/video/domain/Video'
+import { SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
 
 let repository: SQLiteVideoRepository
 
@@ -9,7 +9,7 @@ beforeAll(async () => {
 })
 describe('Video repository integration tests', () => {
   it('should create and then retrieve videos', async () => {
-    const video = Video.fromPrimitives('0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 'Hello world')
+    const video = Video.fromPrimitives({ id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world' })
 
     await repository.save(video)
 

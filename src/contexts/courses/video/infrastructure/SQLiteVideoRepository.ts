@@ -36,11 +36,12 @@ export class SQLiteVideoRepository implements VideoRepository {
 
   async searchAll (): Promise<Video[]> {
     const allVideoModels = await VideoModel.findAll()
-    return allVideoModels.map(videoModel => Video.fromPrimitives(videoModel.id, videoModel.title))
+    return allVideoModels.map(videoModel => Video.fromPrimitives(videoModel))
   }
 
   async save (video: Video): Promise<void> {
-    await VideoModel.create(video.toPrimitives())
+    const primitives = video.toPrimitives()
+    await VideoModel.create(primitives)
   }
 
   async deleteAll (): Promise<void> {

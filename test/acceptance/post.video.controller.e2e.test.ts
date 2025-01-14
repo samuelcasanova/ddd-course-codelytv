@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import request from 'supertest'
 import type { Express } from 'express'
-import { SQLiteVideoRepository } from '../../src/video/infrastructure/SQLiteVideoRepository'
-import { App } from '../../src/shared/infrastructure/app'
+import { SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
+import { App } from '../../src/contexts/courses/shared/infrastructure/app'
 
 let expressApp: Express
 

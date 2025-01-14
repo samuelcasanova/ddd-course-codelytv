@@ -1,13 +1,12 @@
-import { CreateVideoCommand } from '../../src/video/application/CreateVideoCommand'
-import { CreateVideoCommandHandler } from '../../src/video/application/CreateVideoCommandHandler'
-import { Video } from '../../src/video/domain/Video'
-import { SearchAllVideosQueryHandler } from '../../src/video/application/SearchAllVideosQueryHandler'
-import type { EventBus } from '../../src/shared/domain/EventBus'
-import { SearchAllVideosQuery } from '../../src/video/application/SearchAllVideosQuery'
-import type { VideosResponse } from '../../src/video/application/VideosResponse'
+import { CreateVideoCommand } from '../../src/contexts/courses/video/application/CreateVideoCommand'
+import { CreateVideoCommandHandler } from '../../src/contexts/courses/video/application/CreateVideoCommandHandler'
+import { Video } from '../../src/contexts/courses/video/domain/Video'
+import { SearchAllVideosQueryHandler } from '../../src/contexts/courses/video/application/SearchAllVideosQueryHandler'
+import type { EventBus } from '../../src/contexts/courses/shared/domain/EventBus'
+import { SearchAllVideosQuery } from '../../src/contexts/courses/video/application/SearchAllVideosQuery'
+import type { VideosResponse } from '../../src/contexts/courses/video/application/VideosResponse'
 
-const videoIdValue = '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d'
-const videoTitleValue = 'Hello world'
+const videoPrimitives = { id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world' }
 
 const repository = {
   save: jest.fn(),
@@ -57,7 +56,7 @@ async function whenaUserSearchsForAllVideos (): Promise<VideosResponse> {
 }
 
 function givenaVideoIsInTheRepository (): void {
-  (repository.searchAll).mockResolvedValue([Video.fromPrimitives(videoIdValue, videoTitleValue)])
+  (repository.searchAll).mockResolvedValue([Video.fromPrimitives(videoPrimitives)])
 }
 
 function thenItsSavedInTheRepositoryAndAnEventIsPublished (): void {
@@ -71,5 +70,5 @@ async function whenTheVideoIsCreated (createVideoCommand: CreateVideoCommand): P
 }
 
 function givenaUserWantsToCreateaVideo (): CreateVideoCommand {
-  return new CreateVideoCommand(videoIdValue, videoTitleValue)
+  return new CreateVideoCommand(videoPrimitives.id, videoPrimitives.title)
 }
