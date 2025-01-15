@@ -12,7 +12,7 @@ beforeAll(async () => {
   await repository.deleteAll()
 })
 describe('GET /videos/:videoId/reviews', () => {
-  it('should get all videos', async () => {
+  it('should get all video reviews', async () => {
     await request(expressApp).post('/api/videos').send({
       id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
       title: 'Hello world'

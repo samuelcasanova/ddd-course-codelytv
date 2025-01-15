@@ -16,6 +16,9 @@ const repository = {
 class SpyEventBus implements EventBus {
   private publishAllCallCount = 0
 
+  subscribe (eventName: string, handler: (event: any) => void): void {
+  }
+
   publish (event: any): void {
   }
 
@@ -42,6 +45,10 @@ describe('Video', () => {
     const videosResponse = await whenaUserSearchsForAllVideos()
     thenTheyFindTheVideo(videosResponse)
   })
+
+  it('should review a video', async () => {
+    givenaVideoIsInTheRepository()
+  })
 })
 
 function thenTheyFindTheVideo (videosResponse: VideosResponse): void {
@@ -53,6 +60,10 @@ async function whenaUserSearchsForAllVideos (): Promise<VideosResponse> {
   const query = new SearchAllVideosQuery()
   const handler = new SearchAllVideosQueryHandler(repository)
   return await handler.ask(query)
+}
+
+async function whenaUserReviewstheVideo (): Promise<void> {
+  eventBus.publish(new Event('video.reviewed'))
 }
 
 function givenaVideoIsInTheRepository (): void {

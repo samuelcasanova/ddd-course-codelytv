@@ -6,10 +6,13 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint src",
     "build": "rm -rf ./build && tsc",
+    "clean": "rm -f ./data/*",
     "start": "npm run build && node build/src/shared/infrastructure/index.js",
     "dev": "nodemon --exec ts-node ./src/shared/infrastructure/index.ts",
-    "test:watch": "jest --watch",
-    "test": "jest"
+    "test:unit": "jest --testMatch **/test/**/*unit.test.ts",
+    "test:integration": "jest --testMatch **/test/**/*integration.test.ts",
+    "test:e2e": "jest --testMatch **/test/**/*e2e.test.ts --runInBand",
+    "test": "jest --runInBand"
   },
   "keywords": [
     "node",
