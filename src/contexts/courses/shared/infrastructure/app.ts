@@ -13,6 +13,7 @@ import { FakeRabbitMqEventBus } from './FakeRabbitMqEventBus'
 import { ReviewVideoCommandHandler } from '../../videoReviews/application/ReviewVideoCommandHandler'
 import { SQLiteVideoReviewRepository } from '../../videoReviews/infrastructure/SQLiteVideoReviewRepository'
 import { VideoReviewRouter } from '../../videoReviews/infrastructure/VideoReviewRouter'
+import { SearchAllVideoReviewsQueryHandler } from '../../videoReviews/application/SearchAllVideoReviewsQueryHandler'
 
 export class App {
   private readonly expressApp: express.Express
@@ -42,6 +43,7 @@ export class App {
     commandBus.register(new ReviewVideoCommandHandler(videoReviewRepository, eventBus))
     const queryBus = new InMemoryQueryBus()
     queryBus.register(new SearchAllVideosQueryHandler(videoRepository))
+    queryBus.register(new SearchAllVideoReviewsQueryHandler(videoReviewRepository))
     App.app = new App(commandBus, queryBus)
     return App.app
   }
