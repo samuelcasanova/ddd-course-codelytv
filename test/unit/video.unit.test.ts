@@ -6,7 +6,7 @@ import type { EventBus } from '../../src/contexts/courses/shared/domain/EventBus
 import { SearchAllVideosQuery } from '../../src/contexts/courses/video/application/SearchAllVideosQuery'
 import type { VideosResponse } from '../../src/contexts/courses/video/application/VideosResponse'
 
-const videoPrimitives = { id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world' }
+const videoPrimitives = { id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world', score: { reviews: 0, rating: 0 } }
 
 const repository = {
   save: jest.fn(),

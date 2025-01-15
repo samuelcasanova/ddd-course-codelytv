@@ -9,7 +9,7 @@ beforeAll(async () => {
 })
 describe('Video repository integration tests', () => {
   it('should create and then retrieve videos', async () => {
-    const video = Video.fromPrimitives({ id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world' })
+    const video = Video.fromPrimitives({ id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world', score: { reviews: 0, rating: 0 } })
 
     await repository.save(video)
 

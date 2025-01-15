@@ -5,6 +5,8 @@ import type { VideoRepository } from '../domain/VideoRepository'
 class VideoModel extends Model<InferAttributes<VideoModel>, InferCreationAttributes<VideoModel>> {
   declare id: string
   declare title: string
+  declare reviews: number
+  declare rating: number
 }
 
 export class SQLiteVideoRepository implements VideoRepository {
@@ -25,6 +27,14 @@ export class SQLiteVideoRepository implements VideoRepository {
         title: {
           type: DataTypes.STRING,
           allowNull: false
+        },
+        reviews: {
+          type: DataTypes.INTEGER,
+          allowNull: false
+        },
+        rating: {
+          type: DataTypes.INTEGER,
+          allowNull: false
         }
       },
       {
@@ -36,12 +46,12 @@ export class SQLiteVideoRepository implements VideoRepository {
 
   async searchAll (): Promise<Video[]> {
     const allVideoModels = await VideoModel.findAll()
-    return allVideoModels.map(videoModel => Video.fromPrimitives(videoModel))
+    return allVideoModels.map(videoModel => Video.fromPrimitives({ id: videoModel.id, title: videoModel.title, score: { reviews: videoModel.reviews, rating: videoModel.rating } }))
   }
 
   async save (video: Video): Promise<void> {
     const primitives = video.toPrimitives()
-    await VideoModel.create(primitives)
+    await VideoModel.create({ ...primitives, reviews: primitives.score.reviews, rating: primitives.score.rating })
   }
 
   async deleteAll (): Promise<void> {

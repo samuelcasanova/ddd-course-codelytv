@@ -12,7 +12,7 @@ export class CreateVideoCommandHandler implements CommandHandler<CreateVideoComm
   }
 
   async handle (command: CreateVideoCommand): Promise<void> {
-    const video = Video.fromPrimitives(command)
+    const video = Video.fromPrimitives({ ...command, score: { reviews: 0, rating: 0 } })
     await this.repository.save(video)
     const events = video.pullDomainEvents()
     this.eventBus.publishAll(events)
