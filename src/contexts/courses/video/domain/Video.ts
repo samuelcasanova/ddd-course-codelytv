@@ -3,6 +3,7 @@ import { Id } from '../../shared/domain/Id'
 import { VideoTitle } from './VideoTitle'
 import { Entity } from '../../shared/domain/Entity'
 import { VideoScore, type VideoScorePrimitives } from './VideoScore'
+import type { Rating } from '../../videoReviews/domain/Rating'
 
 export interface VideoPrimitives {
   id: string
@@ -20,6 +21,10 @@ export class Video extends Entity<Id> {
     const event = new VideoCreatedEvent(video.toPrimitives())
     video.pushDomainEvent(event)
     return video
+  }
+
+  public review (rating: Rating): void {
+    this.videoScore.addReview(rating)
   }
 
   public static fromPrimitives (primitives: VideoPrimitives): Video {

@@ -1,17 +1,17 @@
 import { type Event } from '../domain/Event'
-import { type EventBus } from '../domain/EventBus'
+import { type EventBus, type EventSubscriber } from '../domain/EventBus'
 
 export class FakeRabbitMqEventBus implements EventBus {
-  private readonly subscribers: Record<string, [(event: Event) => void]> = {}
+  private readonly subscribers: Record<EventSubscriber<Event>['eventName'], [EventSubscriber<Event>['handle']]> = {}
 
-  subscribe (eventName: string, handler: (event: Event) => void): void {
-    this.subscribers[eventName].push(handler)
+  subscribe (eventSubscriber: EventSubscriber<Event>): void {
+    this.subscribers[eventSubscriber.eventName].push(eventSubscriber.handle.bind(eventSubscriber))
   }
 
-  publish (event: Event): void {
-    const subscribers = this.subscribers[event.name]
-    if (subscribers?.length > 0) {
-      subscribers.forEach(subscriber => { subscriber(event) })
+  async publish (event: Event): Promise<void> {
+    const subscribersHandlers = this.subscribers[event.name]
+    if (subscribersHandlers?.length > 0) {
+      await Promise.all(subscribersHandlers.map(async (handler) => { await handler(event) }))
     }
 
     const { created, ...data } = event
@@ -24,7 +24,7 @@ export class FakeRabbitMqEventBus implements EventBus {
     console.log(`Publishing event ${event.name}:`, JSON.stringify(jsonApiFormattedEvent, null, 2))
   }
 
-  publishAll (events: Event[]): void {
-    events.forEach(event => { this.publish(event) })
+  async publishAll (events: Event[]): Promise<void> {
+    await Promise.all(events.map(async (event) => { await this.publish(event) }))
   }
 }

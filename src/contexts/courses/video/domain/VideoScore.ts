@@ -1,28 +1,32 @@
+import { Rating } from '../../videoReviews/domain/Rating'
+import { VideoReviews } from '../../videoReviews/domain/VideoReviews'
+
 export interface VideoScorePrimitives {
   reviews: number
   rating: number
 }
 
 export class VideoScore {
-  private constructor (public readonly reviews: number, public readonly rating: number) {}
+  private constructor (public readonly reviews: VideoReviews, public readonly rating: Rating) {}
 
   static create (): VideoScore {
-    return new VideoScore(0, 0)
+    return new VideoScore(new VideoReviews(), new Rating())
   }
 
-  addReview (rating: number): VideoScore {
-    const newRating = (this.rating * this.reviews + rating) / (this.reviews + 1)
-    return new VideoScore(this.reviews + 1, newRating)
+  addReview (rating: Rating): VideoScore {
+    const newReviews = this.reviews.increase()
+    const newRating = new Rating((this.rating.value * this.reviews.value + rating.value) / newReviews.value)
+    return new VideoScore(newReviews, newRating)
   }
 
   toPrimitives (): VideoScorePrimitives {
     return {
-      reviews: this.reviews,
-      rating: this.rating
+      reviews: this.reviews.value,
+      rating: this.rating.value
     }
   }
 
   static fromPrimitives (primitives: VideoScorePrimitives): VideoScore {
-    return new VideoScore(primitives.reviews, primitives.rating)
+    return new VideoScore(new VideoReviews(primitives.reviews), new Rating(primitives.rating))
   }
 }

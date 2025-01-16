@@ -1,6 +1,8 @@
 import { Sequelize, Model, type InferAttributes, type InferCreationAttributes, DataTypes } from 'sequelize'
 import { Video } from '../domain/Video'
 import type { VideoRepository } from '../domain/VideoRepository'
+import type { Id } from '../../shared/domain/Id'
+import { NotFoundError } from '../../shared/infrastructure/NotFoundError'
 
 class VideoModel extends Model<InferAttributes<VideoModel>, InferCreationAttributes<VideoModel>> {
   declare id: string
@@ -42,6 +44,14 @@ export class SQLiteVideoRepository implements VideoRepository {
         tableName: 'videos'
       }
     )
+  }
+
+  async find (id: Id): Promise<Video> {
+    const videoModel = await VideoModel.findByPk(id.value)
+    if (videoModel === null) {
+      throw new NotFoundError(`Video with id ${id.value} not found`)
+    }
+    return Video.fromPrimitives({ id: videoModel.id, title: videoModel.title, score: { reviews: videoModel.reviews, rating: videoModel.rating } })
   }
 
   async searchAll (): Promise<Video[]> {

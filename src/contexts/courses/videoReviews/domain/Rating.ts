@@ -1,9 +1,11 @@
 import { RatingInvalidValueError } from './RatingInvalidValueError'
 
 export class Rating {
-  constructor (public readonly value: number) {
-    if (value < 1 || value > 5 || !Number.isInteger(value)) {
+  public readonly value: number
+  constructor (value?: number) {
+    if (value !== undefined && (value < 1 || value > 5 || !Number.isInteger(value))) {
       throw new RatingInvalidValueError()
     }
+    this.value = value ?? 0
   }
 }

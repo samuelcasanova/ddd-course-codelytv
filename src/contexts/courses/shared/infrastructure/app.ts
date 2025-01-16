@@ -14,6 +14,7 @@ import { ReviewVideoCommandHandler } from '../../videoReviews/application/Review
 import { SQLiteVideoReviewRepository } from '../../videoReviews/infrastructure/SQLiteVideoReviewRepository'
 import { VideoReviewRouter } from '../../videoReviews/infrastructure/VideoReviewRouter'
 import { SearchAllVideoReviewsQueryHandler } from '../../videoReviews/application/SearchAllVideoReviewsQueryHandler'
+import { UpdateVideoScoreCommandHandler } from '../../video/application/UpdateVideoScoreCommandHandler'
 
 export class App {
   private readonly expressApp: express.Express
@@ -40,6 +41,7 @@ export class App {
     const videoReviewRepository = await SQLiteVideoReviewRepository.getInstance()
     const commandBus = new InMemoryCommandBus()
     commandBus.register(new CreateVideoCommandHandler(videoRepository, eventBus))
+    commandBus.register(new UpdateVideoScoreCommandHandler(videoRepository, eventBus))
     commandBus.register(new ReviewVideoCommandHandler(videoReviewRepository, eventBus))
     const queryBus = new InMemoryQueryBus()
     queryBus.register(new SearchAllVideosQueryHandler(videoRepository))
