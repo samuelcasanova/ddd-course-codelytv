@@ -2,25 +2,25 @@ import { CreateVideoCommand } from '../../src/contexts/courses/video/application
 import { CreateVideoCommandHandler } from '../../src/contexts/courses/video/application/CreateVideoCommandHandler'
 import { Video } from '../../src/contexts/courses/video/domain/Video'
 import { SearchAllVideosQueryHandler } from '../../src/contexts/courses/video/application/SearchAllVideosQueryHandler'
-import type { EventBus } from '../../src/contexts/courses/shared/domain/EventBus'
+import type { EventBus, EventSubscriber } from '../../src/contexts/courses/shared/domain/EventBus'
 import { SearchAllVideosQuery } from '../../src/contexts/courses/video/application/SearchAllVideosQuery'
 import type { VideosResponse } from '../../src/contexts/courses/video/application/VideosResponse'
+import type { Event } from '../../src/contexts/courses/shared/domain/Event'
 
 const videoPrimitives = { id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world', score: { reviews: 0, rating: 0 } }
 
 const repository = {
   save: jest.fn(),
-  searchAll: jest.fn()
+  searchAll: jest.fn(),
+  find: jest.fn()
 }
 
 class SpyEventBus implements EventBus {
   private publishAllCallCount = 0
 
-  subscribe (eventName: string, handler: (event: any) => void): void {
-  }
+  subscribe (eventSubscriber: EventSubscriber<Event<unknown>>): void {}
 
-  publish (event: any): void {
-  }
+  publish (event: any): void {}
 
   publishAll (events: any[]): void {
     this.publishAllCallCount++
@@ -45,10 +45,6 @@ describe('Video', () => {
     const videosResponse = await whenaUserSearchsForAllVideos()
     thenTheyFindTheVideo(videosResponse)
   })
-
-  it('should review a video', async () => {
-    givenaVideoIsInTheRepository()
-  })
 })
 
 function thenTheyFindTheVideo (videosResponse: VideosResponse): void {
@@ -62,12 +58,8 @@ async function whenaUserSearchsForAllVideos (): Promise<VideosResponse> {
   return await handler.ask(query)
 }
 
-async function whenaUserReviewstheVideo (): Promise<void> {
-  eventBus.publish(new Event('video.reviewed'))
-}
-
 function givenaVideoIsInTheRepository (): void {
-  (repository.searchAll).mockResolvedValue([Video.fromPrimitives(videoPrimitives)])
+  repository.searchAll.mockResolvedValue([Video.fromPrimitives(videoPrimitives)])
 }
 
 function thenItsSavedInTheRepositoryAndAnEventIsPublished (): void {

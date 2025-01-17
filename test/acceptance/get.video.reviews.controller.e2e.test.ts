@@ -3,13 +3,16 @@ import request from 'supertest'
 import type { Express } from 'express'
 import { App } from '../../src/contexts/courses/shared/infrastructure/app'
 import { SQLiteVideoReviewRepository } from '../../src/contexts/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
+import { SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
 
 let expressApp: Express
 
 beforeAll(async () => {
   expressApp = (await App.getInstance()).getExpressApp()
-  const repository = await SQLiteVideoReviewRepository.getInstance()
-  await repository.deleteAll()
+  const videoRepository = await SQLiteVideoRepository.getInstance()
+  await videoRepository.deleteAll()
+  const reviewRepository = await SQLiteVideoReviewRepository.getInstance()
+  await reviewRepository.deleteAll()
 })
 describe('GET /videos/:videoId/reviews', () => {
   it('should get all video reviews', async () => {

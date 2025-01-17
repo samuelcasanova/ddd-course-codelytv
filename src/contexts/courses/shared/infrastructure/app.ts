@@ -15,6 +15,7 @@ import { SQLiteVideoReviewRepository } from '../../videoReviews/infrastructure/S
 import { VideoReviewRouter } from '../../videoReviews/infrastructure/VideoReviewRouter'
 import { SearchAllVideoReviewsQueryHandler } from '../../videoReviews/application/SearchAllVideoReviewsQueryHandler'
 import { UpdateVideoScoreCommandHandler } from '../../video/application/UpdateVideoScoreCommandHandler'
+import { ReviewVideoSubscriber } from '../../video/infrastructure/ReviewVideoSubscriber'
 
 export class App {
   private readonly expressApp: express.Express
@@ -37,15 +38,21 @@ export class App {
       return App.app
     }
     const eventBus = new FakeRabbitMqEventBus()
+    const commandBus = new InMemoryCommandBus()
+    const queryBus = new InMemoryQueryBus()
+
     const videoRepository = await SQLiteVideoRepository.getInstance()
     const videoReviewRepository = await SQLiteVideoReviewRepository.getInstance()
-    const commandBus = new InMemoryCommandBus()
+
+    eventBus.subscribe(new ReviewVideoSubscriber(commandBus))
+
     commandBus.register(new CreateVideoCommandHandler(videoRepository, eventBus))
     commandBus.register(new UpdateVideoScoreCommandHandler(videoRepository, eventBus))
     commandBus.register(new ReviewVideoCommandHandler(videoReviewRepository, eventBus))
-    const queryBus = new InMemoryQueryBus()
+
     queryBus.register(new SearchAllVideosQueryHandler(videoRepository))
     queryBus.register(new SearchAllVideoReviewsQueryHandler(videoReviewRepository))
+
     App.app = new App(commandBus, queryBus)
     return App.app
   }

@@ -1,12 +1,12 @@
 import { type Event } from './Event'
 
 export abstract class Entity<EntityId> {
-  domainEvents: Event[] = []
-  pullDomainEvents (): Event[] {
+  domainEvents: Array<Event<unknown>> = []
+  pullDomainEvents (): Array<Event<unknown>> {
     return this.domainEvents
   }
 
-  pushDomainEvent (event: Event): void {
+  pushDomainEvent (event: Event<unknown>): void {
     this.domainEvents.push(event)
   }
 
