@@ -23,7 +23,7 @@ export class VideoReview extends Entity<Id> {
   }
 
   public static fromPrimitives (primitives: VideoReviewPrimitives): VideoReview {
-    return VideoReview.create(new Id(primitives.id), new Id(primitives.videoId), new Rating(primitives.rating), new Comment(primitives.comment))
+    return new VideoReview(new Id(primitives.id), new Id(primitives.videoId), new Rating(primitives.rating), new Comment(primitives.comment))
   }
 
   public toPrimitives (): VideoReviewPrimitives {

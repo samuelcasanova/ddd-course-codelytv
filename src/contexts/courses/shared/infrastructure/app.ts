@@ -25,7 +25,7 @@ export class App {
     this.expressApp = express()
     this.expressApp.use(json())
     this.expressApp.use('/api/videos', new VideoRouter(commandBus, queryBus).getRouter())
-    this.expressApp.use('/api/videos/:videoId/reviews', new VideoReviewRouter(commandBus, queryBus).getRouter())
+    this.expressApp.use('/api/videos', new VideoReviewRouter(commandBus, queryBus).getRouter())
     this.expressApp.use(errorHandler)
   }
 

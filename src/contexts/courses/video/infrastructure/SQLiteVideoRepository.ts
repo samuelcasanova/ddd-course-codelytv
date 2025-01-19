@@ -61,7 +61,7 @@ export class SQLiteVideoRepository implements VideoRepository {
 
   async save (video: Video): Promise<void> {
     const primitives = video.toPrimitives()
-    await VideoModel.create({ ...primitives, reviews: primitives.score.reviews, rating: primitives.score.rating })
+    await VideoModel.upsert({ ...primitives, reviews: primitives.score.reviews, rating: primitives.score.rating })
   }
 
   async deleteAll (): Promise<void> {

@@ -12,7 +12,7 @@ export interface VideoPrimitives {
 }
 
 export class Video extends Entity<Id> {
-  private constructor (id: Id, public readonly title: VideoTitle, public readonly videoScore: VideoScore) {
+  private constructor (id: Id, public readonly title: VideoTitle, public score: VideoScore) {
     super(id)
   }
 
@@ -24,7 +24,7 @@ export class Video extends Entity<Id> {
   }
 
   public review (rating: Rating): void {
-    this.videoScore.addReview(rating)
+    this.score = this.score.addReview(rating)
   }
 
   public static fromPrimitives (primitives: VideoPrimitives): Video {
@@ -35,7 +35,7 @@ export class Video extends Entity<Id> {
     return {
       id: this.id.value,
       title: this.title.value,
-      score: this.videoScore.toPrimitives()
+      score: this.score.toPrimitives()
     }
   }
 }

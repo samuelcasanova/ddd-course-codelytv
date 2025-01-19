@@ -22,12 +22,12 @@ describe('GET /videos/:videoId/reviews', () => {
     })
 
     await request(expressApp).post('/api/videos/0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d/reviews').send({
-      id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6e',
+      id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5ca',
       rating: 5,
       comment: 'Nice video dude!'
     })
     await request(expressApp).post('/api/videos/0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d/reviews').send({
-      id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6f',
+      id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6b',
       rating: 3,
       comment: 'Not so nice man!'
     })

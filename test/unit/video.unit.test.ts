@@ -6,6 +6,8 @@ import type { EventBus, EventSubscriber } from '../../src/contexts/courses/share
 import { SearchAllVideosQuery } from '../../src/contexts/courses/video/application/SearchAllVideosQuery'
 import type { VideosResponse } from '../../src/contexts/courses/video/application/VideosResponse'
 import type { Event } from '../../src/contexts/courses/shared/domain/Event'
+import { UpdateVideoScoreCommand } from '../../src/contexts/courses/video/application/UpdateVideoScoreCommand'
+import { UpdateVideoScoreCommandHandler } from '../../src/contexts/courses/video/application/UpdateVideoScoreCommandHandler'
 
 const videoPrimitives = { id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world', score: { reviews: 0, rating: 0 } }
 
@@ -33,6 +35,10 @@ class SpyEventBus implements EventBus {
 
 const eventBus = new SpyEventBus()
 
+beforeEach(() => {
+  jest.clearAllMocks()
+})
+
 describe('Video', () => {
   it('should create a video', async () => {
     const createVideoCommand = givenaUserWantsToCreateaVideo()
@@ -44,6 +50,12 @@ describe('Video', () => {
     givenaVideoIsInTheRepository()
     const videosResponse = await whenaUserSearchsForAllVideos()
     thenTheyFindTheVideo(videosResponse)
+  })
+
+  it('should update the score when a video is reviewed', async () => {
+    givenaVideoIsInTheRepository()
+    await whenaUserReviewsTheVideo()
+    thenItsSavedInTheRepositoryWithTheUpdatedScore()
   })
 })
 
@@ -59,7 +71,9 @@ async function whenaUserSearchsForAllVideos (): Promise<VideosResponse> {
 }
 
 function givenaVideoIsInTheRepository (): void {
-  repository.searchAll.mockResolvedValue([Video.fromPrimitives(videoPrimitives)])
+  const video = Video.fromPrimitives(videoPrimitives)
+  repository.searchAll.mockResolvedValue([video])
+  repository.find.mockResolvedValue(video)
 }
 
 function thenItsSavedInTheRepositoryAndAnEventIsPublished (): void {
@@ -74,4 +88,17 @@ async function whenTheVideoIsCreated (createVideoCommand: CreateVideoCommand): P
 
 function givenaUserWantsToCreateaVideo (): CreateVideoCommand {
   return new CreateVideoCommand(videoPrimitives.id, videoPrimitives.title)
+}
+
+async function whenaUserReviewsTheVideo (): Promise<void> {
+  const command = new UpdateVideoScoreCommand('0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 4)
+  const handler = new UpdateVideoScoreCommandHandler(repository, eventBus)
+  await handler.handle(command)
+}
+
+function thenItsSavedInTheRepositoryWithTheUpdatedScore (): void {
+  expect(repository.save).toHaveBeenCalled()
+  expect(repository.save.mock.calls[0][0].id.value).toBe('0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d')
+  expect(repository.save.mock.calls[0][0].score.reviews.value).toBe(1)
+  expect(repository.save.mock.calls[0][0].score.rating.value).toBe(4)
 }

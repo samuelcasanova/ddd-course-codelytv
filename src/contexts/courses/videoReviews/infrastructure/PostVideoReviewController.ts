@@ -8,7 +8,7 @@ export async function postVideoController (req: Request, res: Response): Promise
 export class PostVideoReviewController {
   constructor (private readonly commandBus: CommandBus) { }
   async handle (req: Request, res: Response): Promise<void> {
-    const reviewVideoCommand = new ReviewVideoCommand(req.params.videoId, req.body.id, req.body.rating, req.body.comment)
+    const reviewVideoCommand = new ReviewVideoCommand(req.body.id, req.params.videoId, req.body.rating, req.body.comment)
 
     await this.commandBus.dispatch(reviewVideoCommand)
 

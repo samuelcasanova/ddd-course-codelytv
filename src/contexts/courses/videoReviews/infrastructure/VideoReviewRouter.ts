@@ -11,8 +11,8 @@ export class VideoReviewRouter {
     const getVideoReviewsController = new GetVideoReviewsController(this.queryBus)
     const postVideoReviewController = new PostVideoReviewController(this.commandBus)
 
-    videoReviewRouter.get('/', getVideoReviewsController.handle.bind(getVideoReviewsController))
-    videoReviewRouter.post('/', postVideoReviewController.handle.bind(postVideoReviewController))
+    videoReviewRouter.get('/:videoId/reviews', getVideoReviewsController.handle.bind(getVideoReviewsController))
+    videoReviewRouter.post('/:videoId/reviews', postVideoReviewController.handle.bind(postVideoReviewController))
 
     return videoReviewRouter
   }
