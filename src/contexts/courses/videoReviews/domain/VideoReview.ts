@@ -2,7 +2,8 @@ import { Entity } from '../../shared/domain/Entity'
 import { Id } from '../../shared/domain/Id'
 import { Rating } from './Rating'
 import { Comment } from './Comment'
-import { VideoReviewCreatedEvent } from './VideoReviewCreatedEvent'
+import { VideoReviewCreatedEvent } from '../../shared/domain/events/VideoReviewCreatedEvent'
+
 export interface VideoReviewPrimitives {
   id: string
   videoId: string

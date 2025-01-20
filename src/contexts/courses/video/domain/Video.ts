@@ -1,4 +1,4 @@
-import { VideoCreatedEvent } from './VideoCreatedEvent'
+import { VideoCreatedEvent } from '../../shared/domain/events/VideoCreatedEvent'
 import { Id } from '../../shared/domain/Id'
 import { VideoTitle } from './VideoTitle'
 import { Entity } from '../../shared/domain/Entity'

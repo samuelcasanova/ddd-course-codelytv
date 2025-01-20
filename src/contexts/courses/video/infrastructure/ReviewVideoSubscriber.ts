@@ -1,6 +1,6 @@
 import type { CommandBus } from '../../shared/domain/CommandBus'
 import type { EventSubscriber } from '../../shared/domain/EventBus'
-import { VideoReviewCreatedEvent } from '../../videoReviews/domain/VideoReviewCreatedEvent'
+import { VideoReviewCreatedEvent } from '../../shared/domain/events/VideoReviewCreatedEvent'
 import { UpdateVideoScoreCommand } from '../application/UpdateVideoScoreCommand'
 
 export class ReviewVideoSubscriber implements EventSubscriber<VideoReviewCreatedEvent> {
