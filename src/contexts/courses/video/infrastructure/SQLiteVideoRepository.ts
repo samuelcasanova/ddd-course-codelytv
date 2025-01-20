@@ -47,11 +47,16 @@ export class SQLiteVideoRepository implements VideoRepository {
   }
 
   async find (id: Id): Promise<Video> {
-    const videoModel = await VideoModel.findByPk(id.value)
-    if (videoModel === null) {
+    const video = await this.search(id)
+    if (video === null) {
       throw new NotFoundError(`Video with id ${id.value} not found`)
     }
-    return Video.fromPrimitives({ id: videoModel.id, title: videoModel.title, score: { reviews: videoModel.reviews, rating: videoModel.rating } })
+    return video
+  }
+
+  async search (id: Id): Promise<Video | null> {
+    const videoModel = await VideoModel.findByPk(id.value)
+    return videoModel === null ? null : Video.fromPrimitives({ id: videoModel.id, title: videoModel.title, score: { reviews: videoModel.reviews, rating: videoModel.rating } })
   }
 
   async searchAll (): Promise<Video[]> {

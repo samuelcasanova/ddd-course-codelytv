@@ -8,12 +8,15 @@ import type { VideosResponse } from '../../src/contexts/courses/video/applicatio
 import type { Event } from '../../src/contexts/courses/shared/domain/Event'
 import { UpdateVideoScoreCommand } from '../../src/contexts/courses/video/application/UpdateVideoScoreCommand'
 import { UpdateVideoScoreCommandHandler } from '../../src/contexts/courses/video/application/UpdateVideoScoreCommandHandler'
+import { VideoAlreadyExistsError } from '../../src/contexts/courses/video/application/VideoAlreadyExistsError'
 
 const videoPrimitives = { id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world', score: { reviews: 0, rating: 0 } }
+const video = Video.fromPrimitives(videoPrimitives)
 
 const repository = {
   save: jest.fn(),
   searchAll: jest.fn(),
+  search: jest.fn(),
   find: jest.fn()
 }
 
@@ -46,6 +49,17 @@ describe('Video', () => {
     thenItsSavedInTheRepositoryAndAnEventIsPublished()
   })
 
+  it('should throw if the user tries to create a video with an id that already exists', async () => {
+    const createVideoCommand = givenaUserWantsToCreateaVideo()
+    andaVideoWithTheSameIdIsInTheRepository()
+    try {
+      await whenTheVideoIsCreated(createVideoCommand)
+    } catch (error) {
+      thenItThrowsAVideoAlreadyExistsError(error)
+    }
+    expect.assertions(1)
+  })
+
   it('should retrieve all stored videos', async () => {
     givenaVideoIsInTheRepository()
     const videosResponse = await whenaUserSearchsForAllVideos()
@@ -71,7 +85,6 @@ async function whenaUserSearchsForAllVideos (): Promise<VideosResponse> {
 }
 
 function givenaVideoIsInTheRepository (): void {
-  const video = Video.fromPrimitives(videoPrimitives)
   repository.searchAll.mockResolvedValue([video])
   repository.find.mockResolvedValue(video)
 }
@@ -87,6 +100,7 @@ async function whenTheVideoIsCreated (createVideoCommand: CreateVideoCommand): P
 }
 
 function givenaUserWantsToCreateaVideo (): CreateVideoCommand {
+  repository.search.mockResolvedValue(null)
   return new CreateVideoCommand(videoPrimitives.id, videoPrimitives.title)
 }
 
@@ -101,4 +115,12 @@ function thenItsSavedInTheRepositoryWithTheUpdatedScore (): void {
   expect(repository.save.mock.calls[0][0].id.value).toBe('0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d')
   expect(repository.save.mock.calls[0][0].score.reviews.value).toBe(1)
   expect(repository.save.mock.calls[0][0].score.rating.value).toBe(4)
+}
+
+function andaVideoWithTheSameIdIsInTheRepository (): void {
+  repository.search.mockResolvedValue(video)
+}
+
+function thenItThrowsAVideoAlreadyExistsError (error: any): void {
+  expect(error).toBeInstanceOf(VideoAlreadyExistsError)
 }
