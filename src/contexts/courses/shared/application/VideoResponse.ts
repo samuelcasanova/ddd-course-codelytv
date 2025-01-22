@@ -1,5 +1,4 @@
-
 export interface VideoResponse {
-  id: string;
-  title: string;
+  id: string
+  title: string
 }

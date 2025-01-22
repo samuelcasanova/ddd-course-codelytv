@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import request from 'supertest'
 import type { Express } from 'express'
-import { App } from '../../src/contexts/courses/shared/infrastructure/app'
+import { App } from '../../src/contexts/courses/app'
 import { SQLiteVideoReviewRepository } from '../../src/contexts/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
 import { SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
 

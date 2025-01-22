@@ -14,8 +14,6 @@ export class CreateVideoCommandHandler implements CommandHandler<CreateVideoComm
     return CreateVideoCommand.name
   }
 
-  // TODO falta refactorizar el resto de casos de uso que utilizan un videoFinder por detrás, e inyectarlo en VideoReviews en lugar de inyectar el VideoRepository
-  // directamente. También estaría bien añadir el test de intentar dar de alta 2 videos con el mismo id
   async handle (command: CreateVideoCommand): Promise<void> {
     const videoFinder = new VideoFinder(this.repository)
     const id = new Id(command.id)

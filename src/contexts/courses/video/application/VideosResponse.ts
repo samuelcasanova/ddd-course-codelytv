@@ -1,6 +1,5 @@
-import type { VideoResponse } from './VideoResponse';
-
+import type { VideoResponse } from '../../shared/application/VideoResponse'
 
 export interface VideosResponse {
-  videos: VideoResponse[];
+  videos: VideoResponse[]
 }

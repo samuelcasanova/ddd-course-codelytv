@@ -1,21 +1,25 @@
 import express from 'express'
+import 'express-async-errors'
 import { json } from 'body-parser'
-import { errorHandler } from './errorHandler'
-import { VideoRouter } from '../../video/infrastructure/VideoRouter'
-import type { CommandBus } from '../domain/CommandBus'
-import type { QueryBus } from '../domain/QueryBus'
-import { CreateVideoCommandHandler } from '../../video/application/CreateVideoCommandHandler'
-import { SearchAllVideosQueryHandler } from '../../video/application/SearchAllVideosQueryHandler'
-import { SQLiteVideoRepository } from '../../video/infrastructure/SQLiteVideoRepository'
-import { InMemoryCommandBus } from './InMemoryCommandBus'
-import { InMemoryQueryBus } from './InMemoryQueryBus'
-import { FakeRabbitMqEventBus } from './FakeRabbitMqEventBus'
-import { ReviewVideoCommandHandler } from '../../videoReviews/application/ReviewVideoCommandHandler'
-import { SQLiteVideoReviewRepository } from '../../videoReviews/infrastructure/SQLiteVideoReviewRepository'
-import { VideoReviewRouter } from '../../videoReviews/infrastructure/VideoReviewRouter'
-import { SearchAllVideoReviewsQueryHandler } from '../../videoReviews/application/SearchAllVideoReviewsQueryHandler'
-import { UpdateVideoScoreCommandHandler } from '../../video/application/UpdateVideoScoreCommandHandler'
-import { ReviewVideoSubscriber } from '../../video/infrastructure/ReviewVideoSubscriber'
+
+import type { QueryBus } from './shared/domain/QueryBus'
+import type { CommandBus } from './shared/domain/CommandBus'
+import { errorHandler } from './shared/infrastructure/errorHandler'
+import { InMemoryCommandBus } from './shared/infrastructure/InMemoryCommandBus'
+import { InMemoryQueryBus } from './shared/infrastructure/InMemoryQueryBus'
+import { FakeRabbitMqEventBus } from './shared/infrastructure/FakeRabbitMqEventBus'
+
+import { SearchAllVideosQueryHandler } from './video/application/SearchAllVideosQueryHandler'
+import { CreateVideoCommandHandler } from './video/application/CreateVideoCommandHandler'
+import { UpdateVideoScoreCommandHandler } from './video/application/UpdateVideoScoreCommandHandler'
+import { VideoRouter } from './video/infrastructure/VideoRouter'
+import { SQLiteVideoRepository } from './video/infrastructure/SQLiteVideoRepository'
+import { ReviewVideoSubscriber } from './video/infrastructure/ReviewVideoSubscriber'
+
+import { ReviewVideoCommandHandler } from './videoReviews/application/ReviewVideoCommandHandler'
+import { SearchAllVideoReviewsQueryHandler } from './videoReviews/application/SearchAllVideoReviewsQueryHandler'
+import { SQLiteVideoReviewRepository } from './videoReviews/infrastructure/SQLiteVideoReviewRepository'
+import { VideoReviewRouter } from './videoReviews/infrastructure/VideoReviewRouter'
 
 export class App {
   private readonly expressApp: express.Express
@@ -48,7 +52,7 @@ export class App {
 
     commandBus.register(new CreateVideoCommandHandler(videoRepository, eventBus))
     commandBus.register(new UpdateVideoScoreCommandHandler(videoRepository, eventBus))
-    commandBus.register(new ReviewVideoCommandHandler(videoReviewRepository, eventBus))
+    commandBus.register(new ReviewVideoCommandHandler(videoReviewRepository, eventBus, queryBus))
 
     queryBus.register(new SearchAllVideosQueryHandler(videoRepository))
     queryBus.register(new SearchAllVideoReviewsQueryHandler(videoReviewRepository))

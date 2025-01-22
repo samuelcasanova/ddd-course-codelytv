@@ -14,10 +14,15 @@ const videoReviewPrimitives = {
   comment: 'Hello world nice video'
 }
 
-const repository = {
+const mockRepository = {
   save: jest.fn(),
   searchAll: jest.fn(),
   find: jest.fn()
+}
+
+const mockQueryBus = {
+  ask: jest.fn(),
+  register: () => {}
 }
 
 class SpyEventBus implements EventBus {
@@ -36,13 +41,21 @@ class SpyEventBus implements EventBus {
   }
 }
 
-const eventBus = new SpyEventBus()
+const spyEventBus = new SpyEventBus()
 
 describe('Review Video', () => {
-  it('should review a video', async () => {
+  it('should review a video if the video exists', async () => {
     const reviewVideoCommand = givenaUserWantsToReviewaVideo()
+    andThisVideoExists()
     await whenTheVideoIsReviewed(reviewVideoCommand)
-    thenItsSavedInTheRepositoryAndAnEventIsPublished()
+    thenChecksThatTheVideoExists()
+    andItsSavedInTheRepositoryAndAnEventIsPublished()
+  })
+
+  it('should throw if the video does not exist', async () => {
+    const reviewVideoCommand = givenaUserWantsToReviewaVideo()
+    andThisVideoDoesNotExist()
+    void expect(async () => { await whenTheVideoIsReviewed(reviewVideoCommand) }).rejects.toThrow()
   })
 
   it('should retrieve the reviews for a video', async () => {
@@ -53,30 +66,42 @@ describe('Review Video', () => {
 })
 
 function thenTheyFindTheVideoReview (videoReviewsResponse: VideoReviewsResponse): void {
-  expect(repository.searchAll).toHaveBeenCalled()
+  expect(mockRepository.searchAll).toHaveBeenCalled()
   expect(videoReviewsResponse.videoReviews).toHaveLength(1)
 }
 
 async function whenaUserSearchsForAllVideos (): Promise<VideoReviewsResponse> {
   const query = new SearchAllVideoReviewsQuery()
-  const handler = new SearchAllVideoReviewsQueryHandler(repository)
+  const handler = new SearchAllVideoReviewsQueryHandler(mockRepository)
   return await handler.ask(query)
 }
 
 function givenaVideoWithReviewsIsInTheRepository (): void {
-  repository.searchAll.mockResolvedValue([VideoReview.fromPrimitives(videoReviewPrimitives)])
+  mockRepository.searchAll.mockResolvedValue([VideoReview.fromPrimitives(videoReviewPrimitives)])
 }
 
-function thenItsSavedInTheRepositoryAndAnEventIsPublished (): void {
-  expect(repository.save).toHaveBeenCalled()
-  expect(eventBus.publishAllHasBeenCalledOnce()).toBe(true)
+function andItsSavedInTheRepositoryAndAnEventIsPublished (): void {
+  expect(mockRepository.save).toHaveBeenCalled()
+  expect(spyEventBus.publishAllHasBeenCalledOnce()).toBe(true)
 }
 
 async function whenTheVideoIsReviewed (reviewVideoCommand: ReviewVideoCommand): Promise<void> {
-  const handler = new ReviewVideoCommandHandler(repository, eventBus)
+  const handler = new ReviewVideoCommandHandler(mockRepository, spyEventBus, mockQueryBus)
   await handler.handle(reviewVideoCommand)
 }
 
 function givenaUserWantsToReviewaVideo (): ReviewVideoCommand {
   return new ReviewVideoCommand(videoReviewPrimitives.id, videoReviewPrimitives.videoId, videoReviewPrimitives.rating, videoReviewPrimitives.comment)
+}
+
+function thenChecksThatTheVideoExists (): void {
+  expect(mockQueryBus.ask.mock.calls[0][0].id).toBe(videoReviewPrimitives.videoId)
+}
+
+function andThisVideoExists (): void {
+  mockQueryBus.ask.mockResolvedValue({ id: videoReviewPrimitives.videoId })
+}
+
+function andThisVideoDoesNotExist (): void {
+  mockQueryBus.ask.mockRejectedValue(new Error('Video not found'))
 }

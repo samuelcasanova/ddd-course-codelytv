@@ -1,4 +1,4 @@
-import { App } from './app'
+import { App } from '../../app'
 
 async function startServer (): Promise<void> {
   const app = await App.getInstance()

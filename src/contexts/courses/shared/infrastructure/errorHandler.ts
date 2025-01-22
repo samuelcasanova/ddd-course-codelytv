@@ -1,8 +1,10 @@
 import { type Request, type Response, type NextFunction } from 'express'
 
 const errorMap: Record<string, number> = {
-  NotFoundError: 404
+  NotFoundError: 404,
+  VideoAlreadyExistsError: 409
 }
+
 export const errorHandler = (
   error: Error,
   _req: Request,
@@ -10,10 +12,10 @@ export const errorHandler = (
   _next: NextFunction
 ): void => {
   console.error(error)
-  const statusCode = getHttpStatusCode((error as any).prototype?.constructor?.name)
+  const statusCode = getHttpStatusCode(error.constructor?.name)
   res.status(statusCode).send({ error })
 }
 
 function getHttpStatusCode (error: string): number {
-  return errorMap[error] ?? 400
+  return errorMap[error] ?? 500
 }
