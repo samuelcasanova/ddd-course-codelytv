@@ -1,7 +1,7 @@
 import { type Request, type Response } from 'express'
 import type { QueryBus } from '../../shared/domain/QueryBus'
 import { SearchAllVideoReviewsQuery } from '../application/SearchAllVideoReviewsQuery'
-import type { VideoReviewsResponse } from '../application/VideosResponse'
+import type { VideoReviewsResponse } from '../application/VideoReviewsResponse'
 
 export class GetVideoReviewsController {
   constructor (private readonly queryBus: QueryBus) { }

@@ -13,11 +13,16 @@ import { VideoAlreadyExistsError } from '../../src/contexts/courses/video/applic
 const videoPrimitives = { id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world', score: { reviews: 0, rating: 0 } }
 const video = Video.fromPrimitives(videoPrimitives)
 
-const repository = {
+const mockRepository = {
   save: jest.fn(),
   searchAll: jest.fn(),
   search: jest.fn(),
   find: jest.fn()
+}
+
+const mockQueryBus = {
+  ask: jest.fn(),
+  register: () => {}
 }
 
 class SpyEventBus implements EventBus {
@@ -40,11 +45,11 @@ class SpyEventBus implements EventBus {
   }
 }
 
-const eventBus = new SpyEventBus()
+const spyEventBus = new SpyEventBus()
 
 beforeEach(() => {
   jest.clearAllMocks()
-  eventBus.reset()
+  spyEventBus.reset()
 })
 
 describe('Video', () => {
@@ -80,56 +85,57 @@ describe('Video', () => {
 })
 
 function thenTheyFindTheVideo (videosResponse: VideosResponse): void {
-  expect(repository.searchAll).toHaveBeenCalled()
+  expect(mockRepository.searchAll).toHaveBeenCalled()
   expect(videosResponse.videos).toHaveLength(1)
 }
 
 async function whenaUserSearchsForAllVideos (): Promise<VideosResponse> {
   const query = new SearchAllVideosQuery()
-  const handler = new SearchAllVideosQueryHandler(repository)
+  const handler = new SearchAllVideosQueryHandler(mockRepository)
   return await handler.ask(query)
 }
 
 function givenaVideoIsInTheRepository (): void {
-  repository.searchAll.mockResolvedValue([video])
-  repository.find.mockResolvedValue(video)
+  mockRepository.searchAll.mockResolvedValue([video])
+  mockRepository.find.mockResolvedValue(video)
+  mockQueryBus.ask.mockResolvedValue({ videoReviews: [{ id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6e', videoId: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', rating: 4, comment: 'Hello world' }] })
 }
 
 function thenItsSavedInTheRepositoryAndAnEventIsPublished (): void {
-  expect(repository.save).toHaveBeenCalled()
-  expect(eventBus.publishAllHasBeenCalledOnce()).toBe(true)
+  expect(mockRepository.save).toHaveBeenCalled()
+  expect(spyEventBus.publishAllHasBeenCalledOnce()).toBe(true)
 }
 
 async function whenTheVideoIsCreated (createVideoCommand: CreateVideoCommand): Promise<void> {
-  const handler = new CreateVideoCommandHandler(repository, eventBus)
+  const handler = new CreateVideoCommandHandler(mockRepository, spyEventBus)
   await handler.handle(createVideoCommand)
 }
 
 function givenaUserWantsToCreateaVideo (): CreateVideoCommand {
-  repository.search.mockResolvedValue(null)
+  mockRepository.search.mockResolvedValue(null)
   return new CreateVideoCommand(videoPrimitives.id, videoPrimitives.title)
 }
 
 async function whenaUserReviewsTheVideo (): Promise<void> {
   const command = new UpdateVideoScoreCommand('0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 4)
-  const handler = new UpdateVideoScoreCommandHandler(repository, eventBus)
+  const handler = new UpdateVideoScoreCommandHandler(mockRepository, spyEventBus, mockQueryBus)
   await handler.handle(command)
 }
 
 function thenItsSavedInTheRepositoryWithTheUpdatedScore (): void {
-  expect(repository.save).toHaveBeenCalled()
-  expect(repository.save.mock.calls[0][0].id.value).toBe('0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d')
-  expect(repository.save.mock.calls[0][0].score.reviews.value).toBe(1)
-  expect(repository.save.mock.calls[0][0].score.rating.value).toBe(4)
+  expect(mockRepository.save).toHaveBeenCalled()
+  expect(mockRepository.save.mock.calls[0][0].id.value).toBe('0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d')
+  expect(mockRepository.save.mock.calls[0][0].score.reviews.value).toBe(1)
+  expect(mockRepository.save.mock.calls[0][0].score.rating.value).toBe(4)
 }
 
 function andaVideoWithTheSameIdIsInTheRepository (): void {
-  repository.search.mockResolvedValue(video)
+  mockRepository.search.mockResolvedValue(video)
 }
 
 function thenItThrowsAVideoAlreadyExistsError (error: any): void {
   expect(error).toBeInstanceOf(VideoAlreadyExistsError)
 }
 function andAnEventIsPublished (): void {
-  expect(eventBus.publishAllHasBeenCalledOnce()).toBe(true)
+  expect(spyEventBus.publishAllHasBeenCalledOnce()).toBe(true)
 }

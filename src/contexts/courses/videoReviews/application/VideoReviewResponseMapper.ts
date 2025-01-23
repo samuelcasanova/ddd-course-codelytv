@@ -1,5 +1,5 @@
 import type { VideoReview } from '../domain/VideoReview'
-import type { VideoReviewsResponse } from './VideosResponse'
+import type { VideoReviewsResponse } from './VideoReviewsResponse'
 
 export class VideoReviewsResponseMapper {
   fromEntities (videoReviews: VideoReview[]): VideoReviewsResponse {

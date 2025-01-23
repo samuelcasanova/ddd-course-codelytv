@@ -1,18 +1,18 @@
 import type { QueryHandler } from '../../shared/domain/QueryHandler'
 import type { VideoReviewRepository } from '../domain/VideoReviewRepository'
-import type { SearchAllVideoReviewsQuery } from './SearchAllVideoReviewsQuery'
+import type { SearchVideoReviewsForaVideoQuery } from './SearchVideoReviewsForaVideoQuery'
 import { VideoReviewsResponseMapper } from './VideoReviewResponseMapper'
 import type { VideoReviewsResponse } from './VideoReviewsResponse'
 
-export class SearchAllVideoReviewsQueryHandler implements QueryHandler<SearchAllVideoReviewsQuery, VideoReviewsResponse> {
+export class SearchVideoReviewsForaVideoQueryHandler implements QueryHandler<SearchVideoReviewsForaVideoQuery, VideoReviewsResponse> {
   constructor (private readonly repository: VideoReviewRepository) { }
 
   subscribedTo (): string {
-    return 'SearchAllVideoReviewsQuery'
+    return 'SearchVideoReviewsForaVideoQuery'
   }
 
-  async ask (_query: SearchAllVideoReviewsQuery): Promise<VideoReviewsResponse> {
-    const videoReviews = await this.repository.searchAll()
+  async ask (query: SearchVideoReviewsForaVideoQuery): Promise<VideoReviewsResponse> {
+    const videoReviews = await this.repository.searchByVideoId(query.videoId)
     const mapper = new VideoReviewsResponseMapper()
     return mapper.fromEntities(videoReviews)
   }

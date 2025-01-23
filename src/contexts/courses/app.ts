@@ -20,6 +20,8 @@ import { ReviewVideoCommandHandler } from './videoReviews/application/ReviewVide
 import { SearchAllVideoReviewsQueryHandler } from './videoReviews/application/SearchAllVideoReviewsQueryHandler'
 import { SQLiteVideoReviewRepository } from './videoReviews/infrastructure/SQLiteVideoReviewRepository'
 import { VideoReviewRouter } from './videoReviews/infrastructure/VideoReviewRouter'
+import { SearchVideoReviewsForaVideoQueryHandler } from './videoReviews/application/SearchVideoReviewsForaVideoQueryHandler'
+import { FindVideoQueryHandler } from './video/application/FindVideoQueryHandler'
 
 export class App {
   private readonly expressApp: express.Express
@@ -51,11 +53,13 @@ export class App {
     eventBus.subscribe(new ReviewVideoSubscriber(commandBus))
 
     commandBus.register(new CreateVideoCommandHandler(videoRepository, eventBus))
-    commandBus.register(new UpdateVideoScoreCommandHandler(videoRepository, eventBus))
+    commandBus.register(new UpdateVideoScoreCommandHandler(videoRepository, eventBus, queryBus))
     commandBus.register(new ReviewVideoCommandHandler(videoReviewRepository, eventBus, queryBus))
 
     queryBus.register(new SearchAllVideosQueryHandler(videoRepository))
     queryBus.register(new SearchAllVideoReviewsQueryHandler(videoReviewRepository))
+    queryBus.register(new SearchVideoReviewsForaVideoQueryHandler(videoReviewRepository))
+    queryBus.register(new FindVideoQueryHandler(videoRepository))
 
     App.app = new App(commandBus, queryBus)
     return App.app

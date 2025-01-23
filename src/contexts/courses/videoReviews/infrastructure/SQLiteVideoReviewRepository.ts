@@ -50,6 +50,15 @@ export class SQLiteVideoReviewRepository implements VideoReviewRepository {
     return videoReviews
   }
 
+  async searchByVideoId (videoId: string): Promise<VideoReview[]> {
+    const videoReviewModels = await VideoReviewModel.findAll({ where: { videoId } })
+    if (videoReviewModels === null) {
+      return []
+    }
+    const videoReviews = videoReviewModels.map(videoModel => VideoReview.fromPrimitives(videoModel))
+    return videoReviews
+  }
+
   async save (videoReview: VideoReview): Promise<void> {
     await VideoReviewModel.upsert(videoReview.toPrimitives())
   }

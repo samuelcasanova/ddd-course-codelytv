@@ -4,8 +4,8 @@ import type { QueryHandler } from '../domain/QueryHandler'
 
 export class InMemoryQueryBus implements QueryBus {
   private readonly handlers: Array<QueryHandler<Query, unknown>> = []
-  register <T>(handler: QueryHandler<Query, T>): void {
-    this.handlers.push(handler)
+  register <Q extends Query, T>(handler: QueryHandler<Q, T>): void {
+    this.handlers.push(handler as QueryHandler<Query, T>)
   }
 
   async ask <T>(query: Query): Promise<T> {

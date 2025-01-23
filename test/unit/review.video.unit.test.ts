@@ -5,7 +5,9 @@ import { ReviewVideoCommandHandler } from '../../src/contexts/courses/videoRevie
 import { VideoReview } from '../../src/contexts/courses/videoReviews/domain/VideoReview'
 import { SearchAllVideoReviewsQuery } from '../../src/contexts/courses/videoReviews/application/SearchAllVideoReviewsQuery'
 import { SearchAllVideoReviewsQueryHandler } from '../../src/contexts/courses/videoReviews/application/SearchAllVideoReviewsQueryHandler'
-import type { VideoReviewsResponse } from '../../src/contexts/courses/videoReviews/application/VideosResponse'
+import type { VideoReviewsResponse } from '../contexts/courses/videoReviews/application/VideoReviewsResponse'
+import { SearchVideoReviewsForaVideoQuery } from '../../src/contexts/courses/videoReviews/application/SearchVideoReviewsForaVideoQuery'
+import { SearchVideoReviewsForaVideoQueryHandler } from '../../src/contexts/courses/videoReviews/application/SearchVideoReviewsForaVideoQueryHandler'
 
 const videoReviewPrimitives = {
   id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
@@ -17,6 +19,7 @@ const videoReviewPrimitives = {
 const mockRepository = {
   save: jest.fn(),
   searchAll: jest.fn(),
+  searchByVideoId: jest.fn(),
   find: jest.fn()
 }
 
@@ -58,10 +61,16 @@ describe('Review Video', () => {
     void expect(async () => { await whenTheVideoIsReviewed(reviewVideoCommand) }).rejects.toThrow()
   })
 
+  it('should retrieve the reviews for all videos', async () => {
+    givenaVideoWithReviewsIsInTheRepository()
+    const videoReviewsResponse = await whenaUserSearchsForAllVideoReviews()
+    thenTheyFindTheVideoReview(videoReviewsResponse)
+  })
+
   it('should retrieve the reviews for a video', async () => {
     givenaVideoWithReviewsIsInTheRepository()
-    const videoReviewsResponse = await whenaUserSearchsForAllVideos()
-    thenTheyFindTheVideoReview(videoReviewsResponse)
+    const videoReviewsResponse = await whenaUserSearchsForVideoReviewsForaVideo(videoReviewPrimitives.videoId)
+    thenTheyFindTheVideoReviewsForThatVideo(videoReviewsResponse)
   })
 })
 
@@ -70,14 +79,27 @@ function thenTheyFindTheVideoReview (videoReviewsResponse: VideoReviewsResponse)
   expect(videoReviewsResponse.videoReviews).toHaveLength(1)
 }
 
-async function whenaUserSearchsForAllVideos (): Promise<VideoReviewsResponse> {
+function thenTheyFindTheVideoReviewsForThatVideo (videoReviewsResponse: VideoReviewsResponse): void {
+  expect(mockRepository.searchByVideoId).toHaveBeenCalled()
+  expect(videoReviewsResponse.videoReviews).toHaveLength(1)
+}
+
+async function whenaUserSearchsForAllVideoReviews (): Promise<VideoReviewsResponse> {
   const query = new SearchAllVideoReviewsQuery()
   const handler = new SearchAllVideoReviewsQueryHandler(mockRepository)
   return await handler.ask(query)
 }
 
+async function whenaUserSearchsForVideoReviewsForaVideo (videoId: string): Promise<VideoReviewsResponse> {
+  const query = new SearchVideoReviewsForaVideoQuery(videoId)
+  const handler = new SearchVideoReviewsForaVideoQueryHandler(mockRepository)
+  return await handler.ask(query)
+}
+
 function givenaVideoWithReviewsIsInTheRepository (): void {
-  mockRepository.searchAll.mockResolvedValue([VideoReview.fromPrimitives(videoReviewPrimitives)])
+  const videoReviewsForaVideo = [VideoReview.fromPrimitives(videoReviewPrimitives)]
+  mockRepository.searchAll.mockResolvedValue(videoReviewsForaVideo)
+  mockRepository.searchByVideoId.mockResolvedValue(videoReviewsForaVideo)
 }
 
 function andItsSavedInTheRepositoryAndAnEventIsPublished (): void {
