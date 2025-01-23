@@ -34,12 +34,17 @@ class SpyEventBus implements EventBus {
   publishAllHasBeenCalledOnce (): boolean {
     return this.publishAllCallCount === 1
   }
+
+  reset (): void {
+    this.publishAllCallCount = 0
+  }
 }
 
 const eventBus = new SpyEventBus()
 
 beforeEach(() => {
   jest.clearAllMocks()
+  eventBus.reset()
 })
 
 describe('Video', () => {
@@ -70,6 +75,7 @@ describe('Video', () => {
     givenaVideoIsInTheRepository()
     await whenaUserReviewsTheVideo()
     thenItsSavedInTheRepositoryWithTheUpdatedScore()
+    andAnEventIsPublished()
   })
 })
 
@@ -123,4 +129,7 @@ function andaVideoWithTheSameIdIsInTheRepository (): void {
 
 function thenItThrowsAVideoAlreadyExistsError (error: any): void {
   expect(error).toBeInstanceOf(VideoAlreadyExistsError)
+}
+function andAnEventIsPublished (): void {
+  expect(eventBus.publishAllHasBeenCalledOnce()).toBe(true)
 }
