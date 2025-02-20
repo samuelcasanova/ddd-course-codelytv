@@ -2,9 +2,7 @@ import type { CommandHandler } from '../../shared/domain/CommandHandler'
 import type { EventBus } from '../../shared/domain/EventBus'
 import { Id } from '../../shared/domain/Id'
 import type { QueryBus } from '../../shared/domain/QueryBus'
-import { SearchAllVideoReviewsQuery } from '../../videoReviews/application/SearchAllVideoReviewsQuery'
 import { SearchVideoReviewsForaVideoQuery } from '../../videoReviews/application/SearchVideoReviewsForaVideoQuery'
-import { SearchVideoReviewsForaVideoQueryHandler } from '../../videoReviews/application/SearchVideoReviewsForaVideoQueryHandler'
 import type { VideoReviewsResponse } from '../../videoReviews/application/VideoReviewsResponse'
 import { Rating } from '../../videoReviews/domain/Rating'
 import { VideoFinder } from '../domain/VideoFinder'
@@ -25,6 +23,6 @@ export class UpdateVideoScoreCommandHandler implements CommandHandler<UpdateVide
     videoReviews.videoReviews.forEach(review => { video.review(new Rating(review.rating)) })
     await this.repository.save(video)
     const events = video.pullDomainEvents()
-    this.eventBus.publishAll(events)
+    await this.eventBus.publishAll(events)
   }
 }

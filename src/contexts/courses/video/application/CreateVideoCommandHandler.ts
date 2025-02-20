@@ -4,6 +4,7 @@ import { Id } from '../../shared/domain/Id'
 import { Video } from '../domain/Video'
 import { VideoFinder } from '../domain/VideoFinder'
 import { type VideoRepository } from '../domain/VideoRepository'
+import { VideoTitle } from '../domain/VideoTitle'
 import { CreateVideoCommand } from './CreateVideoCommand'
 import { VideoAlreadyExistsError } from './VideoAlreadyExistsError'
 
@@ -21,9 +22,9 @@ export class CreateVideoCommandHandler implements CommandHandler<CreateVideoComm
     if (existingVideo !== null) {
       throw new VideoAlreadyExistsError(id)
     }
-    const video = Video.fromPrimitives({ ...command, score: { reviews: 0, rating: 0 } })
+    const video = Video.create(new Id(command.id), new VideoTitle(command.title))
     await this.repository.save(video)
     const events = video.pullDomainEvents()
-    this.eventBus.publishAll(events)
+    await this.eventBus.publishAll(events)
   }
 }

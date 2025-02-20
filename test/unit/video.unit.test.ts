@@ -30,9 +30,9 @@ class SpyEventBus implements EventBus {
 
   subscribe (eventSubscriber: EventSubscriber<Event<unknown>>): void {}
 
-  publish (event: any): void {}
+  async publish (event: any): Promise<void> {}
 
-  publishAll (events: any[]): void {
+  async publishAll (events: any[]): Promise<void> {
     this.publishAllCallCount++
   }
 

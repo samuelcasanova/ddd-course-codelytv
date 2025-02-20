@@ -12,7 +12,9 @@ export class VideoResponseMapper {
   fromEntity (video: Video): VideoResponse {
     return {
       id: video.id.value,
-      title: video.title.value
+      title: video.title.value,
+      reviews: video.score.reviews.value,
+      rating: video.score.rating.value
     }
   }
 }

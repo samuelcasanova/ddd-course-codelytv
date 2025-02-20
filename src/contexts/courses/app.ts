@@ -22,12 +22,13 @@ import { SQLiteVideoReviewRepository } from './videoReviews/infrastructure/SQLit
 import { VideoReviewRouter } from './videoReviews/infrastructure/VideoReviewRouter'
 import { SearchVideoReviewsForaVideoQueryHandler } from './videoReviews/application/SearchVideoReviewsForaVideoQueryHandler'
 import { FindVideoQueryHandler } from './video/application/FindVideoQueryHandler'
+import type { EventBus } from './shared/domain/EventBus'
 
 export class App {
-  private readonly expressApp: express.Express
   private static app: App
+  private readonly expressApp: express.Express
 
-  private constructor (commandBus: CommandBus, queryBus: QueryBus) {
+  private constructor (public readonly commandBus: CommandBus, public readonly queryBus: QueryBus, public readonly eventBus: EventBus) {
     this.expressApp = express()
     this.expressApp.use(json())
     this.expressApp.use('/api/videos', new VideoRouter(commandBus, queryBus).getRouter())
@@ -61,7 +62,7 @@ export class App {
     queryBus.register(new SearchVideoReviewsForaVideoQueryHandler(videoReviewRepository))
     queryBus.register(new FindVideoQueryHandler(videoRepository))
 
-    App.app = new App(commandBus, queryBus)
+    App.app = new App(commandBus, queryBus, eventBus)
     return App.app
   }
 

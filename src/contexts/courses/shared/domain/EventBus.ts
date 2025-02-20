@@ -7,6 +7,6 @@ export interface EventSubscriber<EventType extends Event> {
 
 export interface EventBus {
   subscribe: (eventSubscriber: EventSubscriber<Event>) => void
-  publish: (event: Event) => void
-  publishAll: (events: Event[]) => void
+  publish: (event: Event) => Promise<void>
+  publishAll: (events: Event[]) => Promise<void>
 }
