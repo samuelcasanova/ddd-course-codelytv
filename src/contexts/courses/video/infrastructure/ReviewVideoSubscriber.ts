@@ -11,7 +11,7 @@ export class ReviewVideoSubscriber implements EventSubscriber<VideoReviewCreated
   }
 
   async handle (event: VideoReviewCreatedEvent): Promise<void> {
-    const updateVideoRatingCommand = new UpdateVideoScoreCommand(event.payload.videoId, event.payload.rating)
+    const updateVideoRatingCommand = new UpdateVideoScoreCommand(event.payload.videoId, event.payload.rating, event.payload.id)
 
     try {
       await this.commandBus.dispatch(updateVideoRatingCommand)

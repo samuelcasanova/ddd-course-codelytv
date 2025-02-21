@@ -9,6 +9,7 @@ import type { Event } from '../../src/contexts/courses/shared/domain/Event'
 import { UpdateVideoScoreCommand } from '../../src/contexts/courses/video/application/UpdateVideoScoreCommand'
 import { UpdateVideoScoreCommandHandler } from '../../src/contexts/courses/video/application/UpdateVideoScoreCommandHandler'
 import { VideoAlreadyExistsError } from '../../src/contexts/courses/video/application/VideoAlreadyExistsError'
+import { InMemoryCacheRepository } from '../../src/contexts/courses/shared/infrastructure/InMemoryCacheRepository'
 
 const videoPrimitives = { id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', title: 'Hello world', score: { reviews: 0, rating: 0 } }
 const video = Video.fromPrimitives(videoPrimitives)
@@ -117,8 +118,8 @@ function givenaUserWantsToCreateaVideo (): CreateVideoCommand {
 }
 
 async function whenaUserReviewsTheVideo (): Promise<void> {
-  const command = new UpdateVideoScoreCommand('0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 4)
-  const handler = new UpdateVideoScoreCommandHandler(mockRepository, spyEventBus, mockQueryBus)
+  const command = new UpdateVideoScoreCommand('0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 4, '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6e')
+  const handler = new UpdateVideoScoreCommandHandler(mockRepository, spyEventBus, mockQueryBus, new InMemoryCacheRepository())
   await handler.handle(command)
 }
 

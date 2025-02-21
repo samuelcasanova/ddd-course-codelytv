@@ -23,12 +23,14 @@ import { VideoReviewRouter } from './videoReviews/infrastructure/VideoReviewRout
 import { SearchVideoReviewsForaVideoQueryHandler } from './videoReviews/application/SearchVideoReviewsForaVideoQueryHandler'
 import { FindVideoQueryHandler } from './video/application/FindVideoQueryHandler'
 import type { EventBus } from './shared/domain/EventBus'
+import { InMemoryCacheRepository } from './shared/infrastructure/InMemoryCacheRepository'
+import type { CacheRepository } from './shared/domain/CacheRepository'
 
 export class App {
   private static app: App
   private readonly expressApp: express.Express
 
-  private constructor (public readonly commandBus: CommandBus, public readonly queryBus: QueryBus, public readonly eventBus: EventBus) {
+  private constructor (public readonly commandBus: CommandBus, public readonly queryBus: QueryBus, public readonly eventBus: EventBus, public readonly cache: CacheRepository) {
     this.expressApp = express()
     this.expressApp.use(json())
     this.expressApp.use('/api/videos', new VideoRouter(commandBus, queryBus).getRouter())
@@ -50,11 +52,12 @@ export class App {
 
     const videoRepository = await SQLiteVideoRepository.getInstance()
     const videoReviewRepository = await SQLiteVideoReviewRepository.getInstance()
+    const cacheRepository = new InMemoryCacheRepository()
 
     eventBus.subscribe(new ReviewVideoSubscriber(commandBus))
 
     commandBus.register(new CreateVideoCommandHandler(videoRepository, eventBus))
-    commandBus.register(new UpdateVideoScoreCommandHandler(videoRepository, eventBus, queryBus))
+    commandBus.register(new UpdateVideoScoreCommandHandler(videoRepository, eventBus, queryBus, cacheRepository))
     commandBus.register(new ReviewVideoCommandHandler(videoReviewRepository, eventBus, queryBus))
 
     queryBus.register(new SearchAllVideosQueryHandler(videoRepository))
@@ -62,7 +65,7 @@ export class App {
     queryBus.register(new SearchVideoReviewsForaVideoQueryHandler(videoReviewRepository))
     queryBus.register(new FindVideoQueryHandler(videoRepository))
 
-    App.app = new App(commandBus, queryBus, eventBus)
+    App.app = new App(commandBus, queryBus, eventBus, cacheRepository)
     return App.app
   }
 
