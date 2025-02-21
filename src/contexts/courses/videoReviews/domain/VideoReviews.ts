@@ -10,4 +10,8 @@ export class VideoReviews {
   increase (): VideoReviews {
     return new VideoReviews(this.value + 1)
   }
+
+  decrease (): VideoReviews {
+    return new VideoReviews(this.value - 1)
+  }
 }

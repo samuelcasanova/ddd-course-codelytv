@@ -22,6 +22,6 @@ export class ReviewVideoCommandHandler implements CommandHandler<ReviewVideoComm
     const videoReview = VideoReview.create(new Id(command.id), new Id(command.videoId), new Rating(command.rating), new Comment(command.comment))
     await this.repository.save(videoReview)
     const events = videoReview.pullDomainEvents()
-    this.eventBus.publishAll(events)
+    await this.eventBus.publishAll(events)
   }
 }

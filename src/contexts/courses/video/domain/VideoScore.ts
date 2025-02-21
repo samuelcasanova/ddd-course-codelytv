@@ -19,6 +19,12 @@ export class VideoScore {
     return new VideoScore(newReviews, newRating)
   }
 
+  deleteReview (rating: Rating): VideoScore {
+    const newReviews = this.reviews.decrease()
+    const newRating = new Rating((this.rating.value * this.reviews.value - rating.value) / (this.reviews.value - 1))
+    return new VideoScore(newReviews, newRating)
+  }
+
   toPrimitives (): VideoScorePrimitives {
     return {
       reviews: this.reviews.value,

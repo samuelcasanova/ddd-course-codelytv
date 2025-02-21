@@ -1,21 +1,25 @@
 import type { CacheRepository } from '../domain/CacheRepository'
 
 export class InMemoryCacheRepository implements CacheRepository {
-  private hits: Record<string, unknown> = {}
+  private readonly hits = new Map<string, unknown>()
 
   async get <T>(key: string): Promise<T | null> {
-    return this.hits[key] as T ?? null
+    return this.hits.get(key) as T ?? null
   }
 
   async set <T>(key: string, value: T, ttl?: number): Promise<void> {
-    this.hits[key] = value
+    this.hits.set(key, value)
   }
 
   async has (key: string): Promise<boolean> {
-    return this.hits[key] != null
+    return this.hits.has(key)
+  }
+
+  async delete (key: string): Promise<void> {
+    this.hits.delete(key)
   }
 
   async deleteAll (): Promise<void> {
-    this.hits = {}
+    this.hits.clear()
   }
 }

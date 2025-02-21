@@ -25,6 +25,8 @@ import { FindVideoQueryHandler } from './video/application/FindVideoQueryHandler
 import type { EventBus } from './shared/domain/EventBus'
 import { InMemoryCacheRepository } from './shared/infrastructure/InMemoryCacheRepository'
 import type { CacheRepository } from './shared/domain/CacheRepository'
+import { AdjustVideoScoreCommandHandler } from './video/application/AdjustVideoScoreCommandHandler'
+import { DeleteVideoReviewSubscriber } from './video/infrastructure/DeleteVideoReviewSubscriber'
 
 export class App {
   private static app: App
@@ -55,10 +57,12 @@ export class App {
     const cacheRepository = new InMemoryCacheRepository()
 
     eventBus.subscribe(new ReviewVideoSubscriber(commandBus))
+    eventBus.subscribe(new DeleteVideoReviewSubscriber(commandBus))
 
     commandBus.register(new CreateVideoCommandHandler(videoRepository, eventBus))
-    commandBus.register(new UpdateVideoScoreCommandHandler(videoRepository, eventBus, queryBus, cacheRepository))
+    commandBus.register(new UpdateVideoScoreCommandHandler(videoRepository, eventBus, cacheRepository))
     commandBus.register(new ReviewVideoCommandHandler(videoReviewRepository, eventBus, queryBus))
+    commandBus.register(new AdjustVideoScoreCommandHandler(videoRepository, eventBus, cacheRepository))
 
     queryBus.register(new SearchAllVideosQueryHandler(videoRepository))
     queryBus.register(new SearchAllVideoReviewsQueryHandler(videoReviewRepository))

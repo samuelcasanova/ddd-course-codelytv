@@ -30,6 +30,12 @@ export class Video extends Entity<Id> {
     this.pushDomainEvent(event)
   }
 
+  public adjustScore (deletedRating: Rating): void {
+    this.score = this.score.deleteReview(deletedRating)
+    const event = new VideoUpdatedEvent(this.toPrimitives())
+    this.pushDomainEvent(event)
+  }
+
   public static fromPrimitives (primitives: VideoPrimitives): Video {
     return new Video(new Id(primitives.id), new VideoTitle(primitives.title), VideoScore.fromPrimitives(primitives.score))
   }

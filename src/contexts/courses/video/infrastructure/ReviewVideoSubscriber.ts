@@ -11,10 +11,10 @@ export class ReviewVideoSubscriber implements EventSubscriber<VideoReviewCreated
   }
 
   async handle (event: VideoReviewCreatedEvent): Promise<void> {
-    const updateVideoRatingCommand = new UpdateVideoScoreCommand(event.payload.videoId, event.payload.rating, event.payload.id)
+    const updateVideoScoreCommand = new UpdateVideoScoreCommand(event.payload.videoId, event.payload.rating, event.payload.id)
 
     try {
-      await this.commandBus.dispatch(updateVideoRatingCommand)
+      await this.commandBus.dispatch(updateVideoScoreCommand)
     } catch (error) {
       if (error instanceof NotFoundError) {
         console.info('In VideoReviewCommandHandler, video not found, skipping as probably the review message has arrived before the creation of the video')

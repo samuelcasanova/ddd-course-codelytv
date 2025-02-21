@@ -119,7 +119,7 @@ function givenaUserWantsToCreateaVideo (): CreateVideoCommand {
 
 async function whenaUserReviewsTheVideo (): Promise<void> {
   const command = new UpdateVideoScoreCommand('0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 4, '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6e')
-  const handler = new UpdateVideoScoreCommandHandler(mockRepository, spyEventBus, mockQueryBus, new InMemoryCacheRepository())
+  const handler = new UpdateVideoScoreCommandHandler(mockRepository, spyEventBus, new InMemoryCacheRepository())
   await handler.handle(command)
 }
 
