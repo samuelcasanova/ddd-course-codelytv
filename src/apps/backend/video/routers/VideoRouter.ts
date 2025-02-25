@@ -1,10 +1,12 @@
 import express from 'express'
-import { GetVideoController } from './GetVideoController'
-import { PostVideoController } from './PostVideoController'
-import type { CommandBus } from '../../shared/domain/CommandBus'
-import type { QueryBus } from '../../shared/domain/QueryBus'
+import { GetVideoController } from '../controllers/GetVideoController'
+import { PostVideoController } from '../controllers/PostVideoController'
+import type { CommandBus } from '../../../../contexts/courses/shared/domain/CommandBus'
+import type { QueryBus } from '../../../../contexts/courses/shared/domain/QueryBus'
+import type { Router } from '../../Router'
 
-export class VideoRouter {
+export default class VideoRouter implements Router {
+  path = '/api/videos'
   constructor (private readonly commandBus: CommandBus, private readonly queryBus: QueryBus) {}
   getRouter (): express.Router {
     const videoRouter = express.Router()

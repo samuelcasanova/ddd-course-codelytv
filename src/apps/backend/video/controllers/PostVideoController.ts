@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express'
-import { CreateVideoCommand } from '../application/CreateVideoCommand'
-import type { CommandBus } from '../../shared/domain/CommandBus'
+import { CreateVideoCommand } from '../../../../contexts/courses/video/application/CreateVideoCommand'
+import type { CommandBus } from '../../../../contexts/courses/shared/domain/CommandBus'
 
 export class PostVideoController {
   constructor (private readonly commandBus: CommandBus) { }

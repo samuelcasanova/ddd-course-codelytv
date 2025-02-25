@@ -3,7 +3,7 @@ import request from 'supertest'
 import type { Express } from 'express'
 import { SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
 import { VideoMother } from '../domain/VideoMother'
-import { App } from '../../src/contexts/courses/app'
+import { App } from '../../src/apps/backend/app'
 
 let expressApp: Express
 

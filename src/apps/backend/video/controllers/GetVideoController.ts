@@ -1,7 +1,7 @@
 import { type Request, type Response } from 'express'
-import type { QueryBus } from '../../shared/domain/QueryBus'
-import { SearchAllVideosQuery } from '../application/SearchAllVideosQuery'
-import type { VideosResponse } from '../application/VideosResponse'
+import type { QueryBus } from '../../../../contexts/courses/shared/domain/QueryBus'
+import { SearchAllVideosQuery } from '../../../../contexts/courses/video/application/SearchAllVideosQuery'
+import type { VideosResponse } from '../../../../contexts/courses/video/application/VideosResponse'
 
 export class GetVideoController {
   constructor (private readonly queryBus: QueryBus) {}
