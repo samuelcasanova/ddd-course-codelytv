@@ -7,15 +7,11 @@ import { glob } from 'glob'
 import type { QueryBus } from '../../contexts/courses/shared/domain/QueryBus'
 import type { CommandBus } from '../../contexts/courses/shared/domain/CommandBus'
 import { errorHandler } from '../../contexts/courses/shared/infrastructure/errorHandler'
-import { InMemoryCommandBus } from '../../contexts/courses/shared/infrastructure/InMemoryCommandBus'
-import { InMemoryQueryBus } from '../../contexts/courses/shared/infrastructure/InMemoryQueryBus'
-import { FakeRabbitMqEventBus } from '../../contexts/courses/shared/infrastructure/FakeRabbitMqEventBus'
 
 import { SearchAllVideosQueryHandler } from '../../contexts/courses/video/application/SearchAllVideosQueryHandler'
 import { CreateVideoCommandHandler } from '../../contexts/courses/video/application/CreateVideoCommandHandler'
 import { UpdateVideoScoreCommandHandler } from '../../contexts/courses/video/application/UpdateVideoScoreCommandHandler'
 import { SQLiteVideoRepository } from '../../contexts/courses/video/infrastructure/SQLiteVideoRepository'
-import { ReviewVideoSubscriber } from '../../contexts/courses/video/infrastructure/ReviewVideoSubscriber'
 
 import { ReviewVideoCommandHandler } from '../../contexts/courses/videoReviews/application/ReviewVideoCommandHandler'
 import { SearchAllVideoReviewsQueryHandler } from '../../contexts/courses/videoReviews/application/SearchAllVideoReviewsQueryHandler'
@@ -26,9 +22,9 @@ import type { EventBus } from '../../contexts/courses/shared/domain/EventBus'
 import { InMemoryCacheRepository } from '../../contexts/courses/shared/infrastructure/InMemoryCacheRepository'
 import type { CacheRepository } from '../../contexts/courses/shared/domain/CacheRepository'
 import { AdjustVideoScoreCommandHandler } from '../../contexts/courses/video/application/AdjustVideoScoreCommandHandler'
-import { DeleteVideoReviewSubscriber } from '../../contexts/courses/video/infrastructure/DeleteVideoReviewSubscriber'
 import path from 'path'
 import type { Router } from './Router'
+import { Container, ids } from './dependency-injection/Container'
 
 export class App {
   private static app: App
@@ -60,16 +56,13 @@ export class App {
     if (App.app !== undefined) {
       return App.app
     }
-    const eventBus = new FakeRabbitMqEventBus()
-    const commandBus = new InMemoryCommandBus()
-    const queryBus = new InMemoryQueryBus()
+    const eventBus = await Container.get<EventBus>(ids.shared.eventBus)
+    const commandBus = await Container.get<CommandBus>(ids.shared.commandBus)
+    const queryBus = await Container.get<QueryBus>(ids.shared.queryBus)
 
     const videoRepository = await SQLiteVideoRepository.getInstance()
     const videoReviewRepository = await SQLiteVideoReviewRepository.getInstance()
     const cacheRepository = new InMemoryCacheRepository()
-
-    eventBus.subscribe(new ReviewVideoSubscriber(commandBus))
-    eventBus.subscribe(new DeleteVideoReviewSubscriber(commandBus))
 
     commandBus.register(new CreateVideoCommandHandler(videoRepository, eventBus))
     commandBus.register(new UpdateVideoScoreCommandHandler(videoRepository, eventBus, cacheRepository))
