@@ -2,16 +2,17 @@
 import request from 'supertest'
 import type { Express } from 'express'
 import { App } from '../../src/apps/backend/app'
-import { SQLiteVideoReviewRepository } from '../../src/contexts/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
-import { SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
+import { type SQLiteVideoReviewRepository } from '../../src/contexts/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
+import { type SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
+import { Container, ids } from '../../src/apps/backend/dependencyInjection/Container'
 
 let expressApp: Express
 
 beforeAll(async () => {
   expressApp = (await App.getInstance()).getExpressApp()
-  const videoRepository = await SQLiteVideoRepository.getInstance()
+  const videoRepository = await Container.get<SQLiteVideoRepository>(ids.video.videoRepository)
   await videoRepository.deleteAll()
-  const reviewRepository = await SQLiteVideoReviewRepository.getInstance()
+  const reviewRepository = await Container.get<SQLiteVideoReviewRepository>(ids.videoReview.videoReviewRepository)
   await reviewRepository.deleteAll()
 })
 describe('GET /videos/:videoId/reviews', () => {

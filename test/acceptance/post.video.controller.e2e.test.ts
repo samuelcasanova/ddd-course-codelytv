@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import request from 'supertest'
 import type { Express } from 'express'
-import { SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
+import { type SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
 import { App } from '../../src/apps/backend/app'
+import { Container, ids } from '../../src/apps/backend/dependencyInjection/Container'
 
 let expressApp: Express
 let repository: SQLiteVideoRepository
 
 beforeAll(async () => {
   expressApp = (await App.getInstance()).getExpressApp()
-  repository = await SQLiteVideoRepository.getInstance()
+  repository = await Container.get<SQLiteVideoRepository>(ids.video.videoRepository)
 })
 
 beforeEach(async () => {

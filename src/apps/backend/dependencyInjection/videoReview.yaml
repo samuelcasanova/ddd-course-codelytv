@@ -1,0 +1,10 @@
+services:
+  videoReview.videoReviewRepository:
+    class: ../../../contexts/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository
+    arguments: []
+  
+  videoReview.reviewVideoCommandHandler:
+    class: ../../../contexts/courses/videoReviews/application/ReviewVideoCommandHandler
+    arguments: ['@videoReview.videoReviewRepository', '@shared.eventBus', '@shared.queryBus']
+    tags:
+      - { name: 'commandHandler' }

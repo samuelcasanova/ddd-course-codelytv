@@ -1,0 +1,20 @@
+imports:
+  - { resource: ./video.yaml }
+  - { resource: ./videoReview.yaml }
+
+services:
+  shared.eventBus:
+    class: ../../../contexts/courses/shared/infrastructure/FakeRabbitMqEventBus
+    arguments: ['!tagged eventSubscriber']
+
+  shared.commandBus:
+    class: ../../../contexts/courses/shared/infrastructure/InMemoryCommandBus
+    arguments: ['!tagged commandHandler']
+
+  shared.queryBus:
+    class: ../../../contexts/courses/shared/infrastructure/InMemoryQueryBus
+    arguments: []
+
+  shared.cacheRepository:
+    class: ../../../contexts/courses/shared/infrastructure/InMemoryCacheRepository
+    arguments: []

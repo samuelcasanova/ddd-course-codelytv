@@ -1,0 +1,34 @@
+services:
+  video.videoRepository:
+    class: ../../../contexts/courses/video/infrastructure/SQLiteVideoRepository
+    arguments: []
+
+  video.createVideoCommandHandler:
+    class: ../../../contexts/courses/video/application/CreateVideoCommandHandler
+    arguments: ['@video.videoRepository', '@shared.eventBus']
+    tags:
+      - { name: 'commandHandler' }
+
+  video.updateVideoScoreCommandHandler:
+    class: ../../../contexts/courses/video/application/UpdateVideoScoreCommandHandler
+    arguments: ['@video.videoRepository', '@shared.eventBus', '@shared.cacheRepository']
+    tags:
+      - { name: 'commandHandler' }
+
+  video.adjustVideoScoreCommandHandler:
+    class: ../../../contexts/courses/video/application/AdjustVideoScoreCommandHandler
+    arguments: ['@video.videoRepository', '@shared.eventBus', '@shared.cacheRepository']
+    tags:
+      - { name: 'commandHandler' }
+
+  videoReview.reviewVideoSubscriber:
+    class: ../../../contexts/courses/video/infrastructure/ReviewVideoSubscriber
+    arguments: ['@shared.commandBus']
+    tags:
+      - { name: 'eventSubscriber' }
+
+  videoReview.deleteVideoReviewSubscriber:
+    class: ../../../contexts/courses/video/infrastructure/DeleteVideoReviewSubscriber
+    arguments: ['@shared.commandBus']
+    tags:
+      - { name: 'eventSubscriber' }

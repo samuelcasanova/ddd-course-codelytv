@@ -10,9 +10,7 @@ import { AdjustVideoScoreCommand } from './AdjustVideoScoreCommand'
 export class AdjustVideoScoreCommandHandler implements CommandHandler<AdjustVideoScoreCommand> {
   constructor (private readonly repository: VideoRepository, private readonly eventBus: EventBus, private readonly cache: CacheRepository) { }
 
-  subscribedTo (): string {
-    return AdjustVideoScoreCommand.name
-  }
+  subscribedTo = AdjustVideoScoreCommand.name
 
   async handle (command: AdjustVideoScoreCommand): Promise<void> {
     const videoFinder = new VideoFinder(this.repository)

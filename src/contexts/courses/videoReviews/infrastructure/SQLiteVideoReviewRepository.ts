@@ -11,7 +11,7 @@ class VideoReviewModel extends Model<InferAttributes<VideoReviewModel>, InferCre
 
 export class SQLiteVideoReviewRepository implements VideoReviewRepository {
   private readonly sequelize: Sequelize
-  private static instance: SQLiteVideoReviewRepository | null = null
+  private static readonly instance: SQLiteVideoReviewRepository | null = null
 
   private constructor () {
     this.sequelize = new Sequelize({
@@ -67,11 +67,7 @@ export class SQLiteVideoReviewRepository implements VideoReviewRepository {
     await VideoReviewModel.destroy({ where: {} })
   }
 
-  static async getInstance (): Promise<SQLiteVideoReviewRepository> {
-    if (SQLiteVideoReviewRepository.instance == null) {
-      SQLiteVideoReviewRepository.instance = new SQLiteVideoReviewRepository()
-      await SQLiteVideoReviewRepository.instance.sequelize.sync()
-    }
-    return SQLiteVideoReviewRepository.instance
+  async init (): Promise<void> {
+    await this.sequelize.sync()
   }
 }

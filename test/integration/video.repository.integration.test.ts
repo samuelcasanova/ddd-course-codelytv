@@ -1,10 +1,11 @@
 import { Video } from '../../src/contexts/courses/video/domain/Video'
-import { SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
+import { type SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
+import { Container, ids } from '../../src/apps/backend/dependencyInjection/Container'
 
 let repository: SQLiteVideoRepository
 
 beforeAll(async () => {
-  repository = await SQLiteVideoRepository.getInstance()
+  repository = await Container.get<SQLiteVideoRepository>(ids.video.videoRepository)
   await (repository as unknown as { sequelize: { truncate: () => Promise<void> } }).sequelize.truncate()
 })
 describe('Video repository integration tests', () => {

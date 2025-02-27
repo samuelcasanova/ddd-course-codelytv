@@ -3,13 +3,16 @@ import type { CommandBus } from '../domain/CommandBus'
 import type { CommandHandler } from '../domain/CommandHandler'
 
 export class InMemoryCommandBus implements CommandBus {
-  private readonly handlers: Array<CommandHandler<Command>> = []
-  register<T extends Command> (handler: CommandHandler<T>): void {
-    this.handlers.push(handler as CommandHandler<Command>)
+  private readonly handlers: Record<CommandHandler<Command>['subscribedTo'], CommandHandler<Command>> = {}
+
+  constructor (handlers: Array<CommandHandler<Command>>) {
+    handlers.forEach((handler) => {
+      this.handlers[handler.subscribedTo] = handler
+    })
   }
 
   async dispatch (command: Command): Promise<void> {
-    const handler = this.handlers.find(handler => handler.subscribedTo() === command.name)
+    const handler = this.handlers[command.name]
     if (handler === undefined) {
       throw new Error(`Command ${command.name} not found`)
     }

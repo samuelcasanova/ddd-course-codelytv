@@ -2,10 +2,11 @@
 import request from 'supertest'
 import type { Express } from 'express'
 import { App } from '../../src/apps/backend/app'
-import { SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
+import { type SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
 import { VideoReviewCreatedEvent } from '../../src/contexts/courses/shared/domain/events/VideoReviewCreatedEvent'
-import { SQLiteVideoReviewRepository } from '../../src/contexts/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
+import { type SQLiteVideoReviewRepository } from '../../src/contexts/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
 import { VideoReviewDeletedEvent } from '../../src/contexts/courses/shared/domain/events/VideoReviewDeletedEvent'
+import { Container, ids } from '../../src/apps/backend/dependencyInjection/Container'
 
 let app: App
 let expressApp: Express
@@ -22,8 +23,8 @@ const videoReviewRequest = {
 beforeAll(async () => {
   app = await App.getInstance()
   expressApp = app.getExpressApp()
-  videoRepository = await SQLiteVideoRepository.getInstance()
-  reviewRepository = await SQLiteVideoReviewRepository.getInstance()
+  videoRepository = await Container.get<SQLiteVideoRepository>(ids.video.videoRepository)
+  reviewRepository = await Container.get<SQLiteVideoReviewRepository>(ids.videoReview.videoReviewRepository)
 })
 
 beforeEach(async () => {

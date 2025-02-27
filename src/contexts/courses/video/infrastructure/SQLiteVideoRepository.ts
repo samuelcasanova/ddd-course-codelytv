@@ -13,7 +13,7 @@ class VideoModel extends Model<InferAttributes<VideoModel>, InferCreationAttribu
 
 export class SQLiteVideoRepository implements VideoRepository {
   private readonly sequelize: Sequelize
-  private static instance: SQLiteVideoRepository | null = null
+  private static readonly instance: SQLiteVideoRepository | null = null
 
   private constructor () {
     this.sequelize = new Sequelize({
@@ -73,11 +73,7 @@ export class SQLiteVideoRepository implements VideoRepository {
     await VideoModel.destroy({ where: {} })
   }
 
-  static async getInstance (): Promise<SQLiteVideoRepository> {
-    if (SQLiteVideoRepository.instance == null) {
-      SQLiteVideoRepository.instance = new SQLiteVideoRepository()
-      await SQLiteVideoRepository.instance.sequelize.sync()
-    }
-    return SQLiteVideoRepository.instance
+  async init (): Promise<void> {
+    await this.sequelize.sync()
   }
 }

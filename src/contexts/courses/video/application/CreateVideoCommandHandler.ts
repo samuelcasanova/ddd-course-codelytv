@@ -11,9 +11,7 @@ import { VideoAlreadyExistsError } from './VideoAlreadyExistsError'
 export class CreateVideoCommandHandler implements CommandHandler<CreateVideoCommand> {
   constructor (private readonly repository: VideoRepository, private readonly eventBus: EventBus) { }
 
-  subscribedTo (): string {
-    return CreateVideoCommand.name
-  }
+  subscribedTo = CreateVideoCommand.name
 
   async handle (command: CreateVideoCommand): Promise<void> {
     const videoFinder = new VideoFinder(this.repository)

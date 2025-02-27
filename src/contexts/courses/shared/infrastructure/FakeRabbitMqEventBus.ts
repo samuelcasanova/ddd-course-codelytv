@@ -2,23 +2,21 @@ import { type Event } from '../domain/Event'
 import { type EventBus, type EventSubscriber } from '../domain/EventBus'
 
 export class FakeRabbitMqEventBus implements EventBus {
-  private readonly subscribers: Record<EventSubscriber<Event<unknown>>['eventName'], Array<EventSubscriber<Event<unknown>>['handle']>> = {}
+  private readonly subscribers: Record<EventSubscriber<Event<unknown>>['eventName'], Array<EventSubscriber<Event<unknown>>>> = {}
 
   constructor (subscribers: Array<EventSubscriber<Event<unknown>>>) {
-    subscribers.forEach((subscriber) => { this.subscribe(subscriber) })
-  }
-
-  subscribe<T> (eventSubscriber: EventSubscriber<Event<T>>): void {
-    if (this.subscribers[eventSubscriber.eventName] === undefined) {
-      this.subscribers[eventSubscriber.eventName] = []
-    }
-    this.subscribers[eventSubscriber.eventName].push(eventSubscriber.handle.bind(eventSubscriber) as EventSubscriber<Event<unknown>>['handle'])
+    subscribers.forEach((subscriber) => {
+      if (this.subscribers[subscriber.eventName] === undefined) {
+        this.subscribers[subscriber.eventName] = []
+      }
+      this.subscribers[subscriber.eventName].push(subscriber)
+    })
   }
 
   async publish (event: Event<unknown>): Promise<void> {
     const subscribersHandlers = this.subscribers[event.name]
     if (subscribersHandlers?.length > 0) {
-      await Promise.all(subscribersHandlers.map(async (handler) => { await handler(event) }))
+      await Promise.all(subscribersHandlers.map(async (subscriber) => { await subscriber.handle(event) }))
     }
 
     const { created, ...data } = event

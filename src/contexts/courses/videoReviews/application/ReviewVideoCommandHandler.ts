@@ -13,9 +13,7 @@ import type { VideoResponse } from '../../shared/application/VideoResponse'
 export class ReviewVideoCommandHandler implements CommandHandler<ReviewVideoCommand> {
   constructor (private readonly repository: VideoReviewRepository, private readonly eventBus: EventBus, private readonly queryBus: QueryBus) { }
 
-  subscribedTo (): string {
-    return ReviewVideoCommand.name
-  }
+  subscribedTo = ReviewVideoCommand.name
 
   async handle (command: ReviewVideoCommand): Promise<void> {
     await this.queryBus.ask<VideoResponse>(new FindVideoQuery(command.videoId))
