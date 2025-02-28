@@ -5,11 +5,11 @@ imports:
 services:
   shared.eventBus:
     class: ../../../contexts/courses/shared/infrastructure/FakeRabbitMqEventBus
-    arguments: ['!tagged eventSubscriber']
+    arguments: []
 
   shared.commandBus:
     class: ../../../contexts/courses/shared/infrastructure/InMemoryCommandBus
-    arguments: ['!tagged commandHandler']
+    arguments: []
 
   shared.queryBus:
     class: ../../../contexts/courses/shared/infrastructure/InMemoryQueryBus

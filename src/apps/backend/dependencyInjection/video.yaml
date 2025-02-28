@@ -21,6 +21,18 @@ services:
     tags:
       - { name: 'commandHandler' }
 
+  video.findVideoQueryHandler:
+    class: ../../../contexts/courses/video/application/FindVideoQueryHandler
+    arguments: ['@video.videoRepository']
+    tags:
+      - { name: 'queryHandler' }
+
+  video.searchAllVideosQueryHandler:
+    class: ../../../contexts/courses/video/application/SearchAllVideosQueryHandler
+    arguments: ['@video.videoRepository']
+    tags:
+      - { name: 'queryHandler' }
+
   videoReview.reviewVideoSubscriber:
     class: ../../../contexts/courses/video/infrastructure/ReviewVideoSubscriber
     arguments: ['@shared.commandBus']

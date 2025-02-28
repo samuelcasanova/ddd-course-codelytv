@@ -8,9 +8,7 @@ import { VideoResponseMapper } from './VideoResponseMapper'
 export class FindVideoQueryHandler implements QueryHandler<FindVideoQuery, VideoResponse> {
   constructor (private readonly repository: VideoRepository) { }
 
-  subscribedTo (): string {
-    return 'FindVideoQuery'
-  }
+  subscribedTo = 'FindVideoQuery'
 
   async ask (query: FindVideoQuery): Promise<VideoResponse> {
     const video = await this.repository.find(new Id(query.id))

@@ -25,13 +25,13 @@ const mockRepository = {
 
 const mockQueryBus = {
   ask: jest.fn(),
-  register: () => {}
+  subscribe: () => {}
 }
 
 class SpyEventBus implements EventBus {
   private publishAllCallCount = 0
 
-  subscribe (eventSubscriber: EventSubscriber<Event<unknown>>): void {}
+  subscribe (eventSubscribers: Array<EventSubscriber<Event<unknown>>>): void {}
 
   async publish (event: any): Promise<void> { await Promise.resolve() }
 

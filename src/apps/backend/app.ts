@@ -8,23 +8,20 @@ import type { QueryBus } from '../../contexts/courses/shared/domain/QueryBus'
 import type { CommandBus } from '../../contexts/courses/shared/domain/CommandBus'
 import { errorHandler } from '../../contexts/courses/shared/infrastructure/errorHandler'
 
-import { SearchAllVideosQueryHandler } from '../../contexts/courses/video/application/SearchAllVideosQueryHandler'
-import { type CreateVideoCommandHandler } from '../../contexts/courses/video/application/CreateVideoCommandHandler'
-import { type UpdateVideoScoreCommandHandler } from '../../contexts/courses/video/application/UpdateVideoScoreCommandHandler'
 import { type SQLiteVideoRepository } from '../../contexts/courses/video/infrastructure/SQLiteVideoRepository'
 
-import { type ReviewVideoCommandHandler } from '../../contexts/courses/videoReviews/application/ReviewVideoCommandHandler'
-import { SearchAllVideoReviewsQueryHandler } from '../../contexts/courses/videoReviews/application/SearchAllVideoReviewsQueryHandler'
 import { type SQLiteVideoReviewRepository } from '../../contexts/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
-import { SearchVideoReviewsForaVideoQueryHandler } from '../../contexts/courses/videoReviews/application/SearchVideoReviewsForaVideoQueryHandler'
-import { FindVideoQueryHandler } from '../../contexts/courses/video/application/FindVideoQueryHandler'
-import type { EventBus } from '../../contexts/courses/shared/domain/EventBus'
+import type { EventBus, EventSubscriber } from '../../contexts/courses/shared/domain/EventBus'
 import { type InMemoryCacheRepository } from '../../contexts/courses/shared/infrastructure/InMemoryCacheRepository'
 import type { CacheRepository } from '../../contexts/courses/shared/domain/CacheRepository'
-import { type AdjustVideoScoreCommandHandler } from '../../contexts/courses/video/application/AdjustVideoScoreCommandHandler'
 import path from 'path'
 import type { Router } from './Router'
 import { Container, ids } from './dependencyInjection/Container'
+import { type Event } from '../../contexts/courses/shared/domain/Event'
+import type { CommandHandler } from '../../contexts/courses/shared/domain/CommandHandler'
+import type { Command } from '../../contexts/courses/shared/domain/Command'
+import type { Query } from '../../contexts/courses/shared/domain/Query'
+import type { QueryHandler } from '../../contexts/courses/shared/domain/QueryHandler'
 
 export class App {
   private static app: App
@@ -56,9 +53,18 @@ export class App {
     if (App.app !== undefined) {
       return App.app
     }
-    const eventBus = await Container.get<EventBus>(ids.shared.eventBus)
+
     const commandBus = await Container.get<CommandBus>(ids.shared.commandBus)
+    const commandHandlers = await Container.getByTag<CommandHandler<Command>>('commandHandler')
+    commandBus.subscribe(commandHandlers)
+
     const queryBus = await Container.get<QueryBus>(ids.shared.queryBus)
+    const queryHandlers = await Container.getByTag<QueryHandler<Query, unknown>>('queryHandler')
+    queryBus.subscribe(queryHandlers)
+
+    const eventBus = await Container.get<EventBus>(ids.shared.eventBus)
+    const eventSubscribers = await Container.getByTag<EventSubscriber<Event<unknown>>>('eventSubscriber')
+    eventBus.subscribe(eventSubscribers)
 
     const videoRepository = await Container.get<SQLiteVideoRepository>(ids.video.videoRepository)
     await videoRepository.init()
@@ -67,16 +73,6 @@ export class App {
     await videoReviewRepository.init()
 
     const cacheRepository = await Container.get<InMemoryCacheRepository>(ids.shared.cacheRepository)
-
-    // commandBus.register(await Container.get<CreateVideoCommandHandler>(ids.video.createVideoCommandHandler))
-    // commandBus.register(await Container.get<UpdateVideoScoreCommandHandler>(ids.video.updateVideoScoreCommandHandler))
-    // commandBus.register(await Container.get<ReviewVideoCommandHandler>(ids.videoReview.reviewVideoCommandHandler))
-    // commandBus.register(await Container.get<AdjustVideoScoreCommandHandler>(ids.video.adjustVideoScoreCommandHandler))
-
-    queryBus.register(new SearchAllVideosQueryHandler(videoRepository))
-    queryBus.register(new SearchAllVideoReviewsQueryHandler(videoReviewRepository))
-    queryBus.register(new SearchVideoReviewsForaVideoQueryHandler(videoReviewRepository))
-    queryBus.register(new FindVideoQueryHandler(videoRepository))
 
     App.app = new App(commandBus, queryBus, eventBus, cacheRepository)
     return App.app

@@ -5,7 +5,7 @@ import type { CommandHandler } from '../domain/CommandHandler'
 export class InMemoryCommandBus implements CommandBus {
   private readonly handlers: Record<CommandHandler<Command>['subscribedTo'], CommandHandler<Command>> = {}
 
-  constructor (handlers: Array<CommandHandler<Command>>) {
+  async subscribe (handlers: Array<CommandHandler<Command>>): Promise<void> {
     handlers.forEach((handler) => {
       this.handlers[handler.subscribedTo] = handler
     })

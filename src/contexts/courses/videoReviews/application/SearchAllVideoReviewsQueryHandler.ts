@@ -7,9 +7,7 @@ import type { VideoReviewsResponse } from './VideoReviewsResponse'
 export class SearchAllVideoReviewsQueryHandler implements QueryHandler<SearchAllVideoReviewsQuery, VideoReviewsResponse> {
   constructor (private readonly repository: VideoReviewRepository) { }
 
-  subscribedTo (): string {
-    return 'SearchAllVideoReviewsQuery'
-  }
+  subscribedTo = 'SearchAllVideoReviewsQuery'
 
   async ask (_query: SearchAllVideoReviewsQuery): Promise<VideoReviewsResponse> {
     const videoReviews = await this.repository.searchAll()

@@ -4,7 +4,7 @@ import { type EventBus, type EventSubscriber } from '../domain/EventBus'
 export class FakeRabbitMqEventBus implements EventBus {
   private readonly subscribers: Record<EventSubscriber<Event<unknown>>['eventName'], Array<EventSubscriber<Event<unknown>>>> = {}
 
-  constructor (subscribers: Array<EventSubscriber<Event<unknown>>>) {
+  subscribe (subscribers: Array<EventSubscriber<Event<unknown>>>): void {
     subscribers.forEach((subscriber) => {
       if (this.subscribers[subscriber.eventName] === undefined) {
         this.subscribers[subscriber.eventName] = []

@@ -8,3 +8,15 @@ services:
     arguments: ['@videoReview.videoReviewRepository', '@shared.eventBus', '@shared.queryBus']
     tags:
       - { name: 'commandHandler' }
+
+  videoReview.searchAllVideoReviewsQueryHandler:
+    class: ../../../contexts/courses/videoReviews/application/SearchAllVideoReviewsQueryHandler
+    arguments: ['@videoReview.videoReviewRepository']
+    tags:
+      - { name: 'queryHandler' }
+
+  videoReview.searchVideoReviewsForaVideoQueryHandler:
+    class: ../../../contexts/courses/videoReviews/application/SearchVideoReviewsForaVideoQueryHandler
+    arguments: ['@videoReview.videoReviewRepository']
+    tags:
+      - { name: 'queryHandler' }
