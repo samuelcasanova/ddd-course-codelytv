@@ -15,9 +15,9 @@ beforeAll(async () => {
 })
 describe('GET /videos', () => {
   it('should get all videos', async () => {
-    await request(expressApp).post('/api/videos').send(VideoMother.random().toPrimitives())
-    await request(expressApp).post('/api/videos').send(VideoMother.random().toPrimitives())
-    await request(expressApp).post('/api/videos').send(VideoMother.random().toPrimitives())
+    await request(expressApp).post('/api/videos').send(VideoMother.create().toPrimitives())
+    await request(expressApp).post('/api/videos').send(VideoMother.create().toPrimitives())
+    await request(expressApp).post('/api/videos').send(VideoMother.create().toPrimitives())
 
     const response = await request(expressApp).get('/api/videos')
 
