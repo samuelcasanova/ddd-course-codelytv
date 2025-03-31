@@ -5,7 +5,7 @@ import type { CommandHandler } from '../domain/CommandHandler'
 import path from 'path'
 
 export class AsyncFSCommandBus implements CommandBus {
-  register<T extends Command> (_handler: CommandHandler<T>): void {
+  subscribe (handlers: Array<CommandHandler<Command>>): void {
     console.warn('AsyncFSCommandBus does not support registering handlers')
   }
 
