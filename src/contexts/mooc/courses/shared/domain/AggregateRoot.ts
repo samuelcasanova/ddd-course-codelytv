@@ -1,6 +1,6 @@
 import { type Event } from './Event'
 
-export abstract class Entity<EntityId> {
+export abstract class AggregateRoot<AggregateRootId> {
   domainEvents: Array<Event<unknown>> = []
   pullDomainEvents (): Array<Event<unknown>> {
     return this.domainEvents
@@ -10,5 +10,5 @@ export abstract class Entity<EntityId> {
     this.domainEvents.push(event)
   }
 
-  constructor (public readonly id: EntityId) { }
+  constructor (public readonly id: AggregateRootId) { }
 }

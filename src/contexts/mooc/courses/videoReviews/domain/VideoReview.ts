@@ -1,4 +1,4 @@
-import { Entity } from '../../shared/domain/Entity'
+import { AggregateRoot } from '../../shared/domain/AggregateRoot'
 import { Id } from '../../shared/domain/Id'
 import { Rating } from './Rating'
 import { Comment } from './Comment'
@@ -11,7 +11,7 @@ export interface VideoReviewPrimitives {
   comment: string
 }
 
-export class VideoReview extends Entity<Id> {
+export class VideoReview extends AggregateRoot<Id> {
   private constructor (id: Id, public readonly videoId: Id, public readonly rating: Rating, public readonly comment: Comment) {
     super(id)
   }

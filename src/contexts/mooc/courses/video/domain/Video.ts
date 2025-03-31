@@ -1,7 +1,7 @@
 import { VideoCreatedEvent } from '../../shared/domain/events/VideoCreatedEvent'
 import { Id } from '../../shared/domain/Id'
 import { VideoTitle } from './VideoTitle'
-import { Entity } from '../../shared/domain/Entity'
+import { AggregateRoot } from '../../shared/domain/AggregateRoot'
 import { VideoScore, type VideoScorePrimitives } from './VideoScore'
 import type { Rating } from '../../videoReviews/domain/Rating'
 import { VideoUpdatedEvent } from '../../shared/domain/events/VideoUpdatedEvent'
@@ -12,7 +12,7 @@ export interface VideoPrimitives {
   score: VideoScorePrimitives
 }
 
-export class Video extends Entity<Id> {
+export class Video extends AggregateRoot<Id> {
   private constructor (id: Id, public readonly title: VideoTitle, public score: VideoScore) {
     super(id)
   }
