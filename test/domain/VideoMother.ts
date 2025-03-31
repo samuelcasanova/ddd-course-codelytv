@@ -1,7 +1,7 @@
 import { randomInt } from 'crypto'
-import { Video, type VideoPrimitives } from '../../src/contexts/courses/video/domain/Video'
-import { VideoTitle } from '../../src/contexts/courses/video/domain/VideoTitle'
-import { Id } from '../../src/contexts/courses/shared/domain/Id'
+import { Video, type VideoPrimitives } from '../../src/contexts/mooc/courses/video/domain/Video'
+import { VideoTitle } from '../../src/contexts/mooc/courses/video/domain/VideoTitle'
+import { Id } from '../../src/contexts/mooc/courses/shared/domain/Id'
 
 export class VideoMother {
   static create (params?: Partial<VideoPrimitives>): Video {

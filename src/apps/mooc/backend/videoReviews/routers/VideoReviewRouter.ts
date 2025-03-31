@@ -1,6 +1,6 @@
 import express from 'express'
-import type { CommandBus } from '../../../../contexts/courses/shared/domain/CommandBus'
-import type { QueryBus } from '../../../../contexts/courses/shared/domain/QueryBus'
+import type { CommandBus } from '../../../../../contexts/mooc/courses/shared/domain/CommandBus'
+import type { QueryBus } from '../../../../../contexts/mooc/courses/shared/domain/QueryBus'
 import { PostVideoReviewController } from '../controllers/PostVideoReviewController'
 import { GetVideoReviewsController } from '../controllers/GetVideoReviewsController'
 import { type Router } from '../../Router'

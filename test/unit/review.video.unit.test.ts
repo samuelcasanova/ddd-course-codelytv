@@ -1,13 +1,13 @@
-import type { EventBus, EventSubscriber } from '../../src/contexts/courses/shared/domain/EventBus'
-import type { Event } from '../../src/contexts/courses/shared/domain/Event'
-import { ReviewVideoCommand } from '../../src/contexts/courses/videoReviews/application/ReviewVideoCommand'
-import { ReviewVideoCommandHandler } from '../../src/contexts/courses/videoReviews/application/ReviewVideoCommandHandler'
-import { VideoReview } from '../../src/contexts/courses/videoReviews/domain/VideoReview'
-import { SearchAllVideoReviewsQuery } from '../../src/contexts/courses/videoReviews/application/SearchAllVideoReviewsQuery'
-import { SearchAllVideoReviewsQueryHandler } from '../../src/contexts/courses/videoReviews/application/SearchAllVideoReviewsQueryHandler'
-import type { VideoReviewsResponse } from '../contexts/courses/videoReviews/application/VideoReviewsResponse'
-import { SearchVideoReviewsForaVideoQuery } from '../../src/contexts/courses/videoReviews/application/SearchVideoReviewsForaVideoQuery'
-import { SearchVideoReviewsForaVideoQueryHandler } from '../../src/contexts/courses/videoReviews/application/SearchVideoReviewsForaVideoQueryHandler'
+import type { EventBus, EventSubscriber } from '../../src/contexts/mooc/courses/shared/domain/EventBus'
+import type { Event } from '../../src/contexts/mooc/courses/shared/domain/Event'
+import { ReviewVideoCommand } from '../../src/contexts/mooc/courses/videoReviews/application/ReviewVideoCommand'
+import { ReviewVideoCommandHandler } from '../../src/contexts/mooc/courses/videoReviews/application/ReviewVideoCommandHandler'
+import { VideoReview } from '../../src/contexts/mooc/courses/videoReviews/domain/VideoReview'
+import { SearchAllVideoReviewsQuery } from '../../src/contexts/mooc/courses/videoReviews/application/SearchAllVideoReviewsQuery'
+import { SearchAllVideoReviewsQueryHandler } from '../../src/contexts/mooc/courses/videoReviews/application/SearchAllVideoReviewsQueryHandler'
+import type { VideoReviewsResponse } from '../../src/contexts/mooc/courses/videoReviews/application/VideoReviewsResponse'
+import { SearchVideoReviewsForaVideoQuery } from '../../src/contexts/mooc/courses/videoReviews/application/SearchVideoReviewsForaVideoQuery'
+import { SearchVideoReviewsForaVideoQueryHandler } from '../../src/contexts/mooc/courses/videoReviews/application/SearchVideoReviewsForaVideoQueryHandler'
 
 const videoReviewPrimitives = {
   id: '0ab2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',

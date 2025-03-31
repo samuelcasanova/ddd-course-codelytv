@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import request from 'supertest'
 import type { Express } from 'express'
-import { App } from '../../src/apps/backend/app'
-import { type SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
-import { VideoReviewCreatedEvent } from '../../src/contexts/courses/shared/domain/events/VideoReviewCreatedEvent'
-import { type SQLiteVideoReviewRepository } from '../../src/contexts/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
-import { VideoReviewDeletedEvent } from '../../src/contexts/courses/shared/domain/events/VideoReviewDeletedEvent'
-import { Container, ids } from '../../src/apps/backend/dependencyInjection/Container'
+import { App } from '../../src/apps/mooc/backend/app'
+import { type SQLiteVideoRepository } from '../../src/contexts/mooc/courses/video/infrastructure/SQLiteVideoRepository'
+import { VideoReviewCreatedEvent } from '../../src/contexts/mooc/courses/shared/domain/events/VideoReviewCreatedEvent'
+import { type SQLiteVideoReviewRepository } from '../../src/contexts/mooc/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
+import { VideoReviewDeletedEvent } from '../../src/contexts/mooc/courses/shared/domain/events/VideoReviewDeletedEvent'
+import { Container, ids } from '../../src/apps/mooc/backend/dependencyInjection/Container'
 
 let app: App
 let expressApp: Express

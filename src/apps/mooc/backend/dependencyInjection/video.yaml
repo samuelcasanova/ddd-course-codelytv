@@ -1,46 +1,46 @@
 services:
   video.videoRepository:
-    class: ../../../contexts/courses/video/infrastructure/SQLiteVideoRepository
+    class: ../../../../contexts/mooc/courses/video/infrastructure/SQLiteVideoRepository
     arguments: []
 
   video.createVideoCommandHandler:
-    class: ../../../contexts/courses/video/application/CreateVideoCommandHandler
+    class: ../../../../contexts/mooc/courses/video/application/CreateVideoCommandHandler
     arguments: ['@video.videoRepository', '@shared.eventBus']
     tags:
       - { name: 'commandHandler' }
 
   video.updateVideoScoreCommandHandler:
-    class: ../../../contexts/courses/video/application/UpdateVideoScoreCommandHandler
+    class: ../../../../contexts/mooc/courses/video/application/UpdateVideoScoreCommandHandler
     arguments: ['@video.videoRepository', '@shared.eventBus', '@shared.cacheRepository']
     tags:
       - { name: 'commandHandler' }
 
   video.adjustVideoScoreCommandHandler:
-    class: ../../../contexts/courses/video/application/AdjustVideoScoreCommandHandler
+    class: ../../../../contexts/mooc/courses/video/application/AdjustVideoScoreCommandHandler
     arguments: ['@video.videoRepository', '@shared.eventBus', '@shared.cacheRepository']
     tags:
       - { name: 'commandHandler' }
 
   video.findVideoQueryHandler:
-    class: ../../../contexts/courses/video/application/FindVideoQueryHandler
+    class: ../../../../contexts/mooc/courses/video/application/FindVideoQueryHandler
     arguments: ['@video.videoRepository']
     tags:
       - { name: 'queryHandler' }
 
   video.searchAllVideosQueryHandler:
-    class: ../../../contexts/courses/video/application/SearchAllVideosQueryHandler
+    class: ../../../../contexts/mooc/courses/video/application/SearchAllVideosQueryHandler
     arguments: ['@video.videoRepository']
     tags:
       - { name: 'queryHandler' }
 
   videoReview.reviewVideoSubscriber:
-    class: ../../../contexts/courses/video/infrastructure/ReviewVideoSubscriber
+    class: ../../../../contexts/mooc/courses/video/infrastructure/ReviewVideoSubscriber
     arguments: ['@shared.commandBus']
     tags:
       - { name: 'eventSubscriber' }
 
   videoReview.deleteVideoReviewSubscriber:
-    class: ../../../contexts/courses/video/infrastructure/DeleteVideoReviewSubscriber
+    class: ../../../../contexts/mooc/courses/video/infrastructure/DeleteVideoReviewSubscriber
     arguments: ['@shared.commandBus']
     tags:
       - { name: 'eventSubscriber' }

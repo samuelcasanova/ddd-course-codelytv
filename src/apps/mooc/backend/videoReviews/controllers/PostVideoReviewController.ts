@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express'
-import type { CommandBus } from '../../../../contexts/courses/shared/domain/CommandBus'
-import { ReviewVideoCommand } from '../../../../contexts/courses/videoReviews/application/ReviewVideoCommand'
+import type { CommandBus } from '../../../../../contexts/mooc/courses/shared/domain/CommandBus'
+import { ReviewVideoCommand } from '../../../../../contexts/mooc/courses/videoReviews/application/ReviewVideoCommand'
 
 export class PostVideoReviewController {
   constructor (private readonly commandBus: CommandBus) { }

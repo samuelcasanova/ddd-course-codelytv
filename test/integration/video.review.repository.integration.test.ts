@@ -1,6 +1,6 @@
-import { VideoReview } from '../../src/contexts/courses/videoReviews/domain/VideoReview'
-import { type SQLiteVideoReviewRepository } from '../../src/contexts/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
-import { Container, ids } from '../../src/apps/backend/dependencyInjection/Container'
+import { VideoReview } from '../../src/contexts/mooc/courses/videoReviews/domain/VideoReview'
+import { type SQLiteVideoReviewRepository } from '../../src/contexts/mooc/courses/videoReviews/infrastructure/SQLiteVideoReviewRepository'
+import { Container, ids } from '../../src/apps/mooc/backend/dependencyInjection/Container'
 
 let repository: SQLiteVideoReviewRepository
 

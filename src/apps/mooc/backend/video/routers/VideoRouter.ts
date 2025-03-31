@@ -1,8 +1,8 @@
 import express from 'express'
 import { GetVideoController } from '../controllers/GetVideoController'
 import { PostVideoController } from '../controllers/PostVideoController'
-import type { CommandBus } from '../../../../contexts/courses/shared/domain/CommandBus'
-import type { QueryBus } from '../../../../contexts/courses/shared/domain/QueryBus'
+import type { CommandBus } from '../../../../../contexts/mooc/courses/shared/domain/CommandBus'
+import type { QueryBus } from '../../../../../contexts/mooc/courses/shared/domain/QueryBus'
 import type { Router } from '../../Router'
 
 export default class VideoRouter implements Router {

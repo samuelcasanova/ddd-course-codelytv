@@ -1,6 +1,6 @@
-import { Video } from '../../src/contexts/courses/video/domain/Video'
-import { type SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
-import { Container, ids } from '../../src/apps/backend/dependencyInjection/Container'
+import { Video } from '../../src/contexts/mooc/courses/video/domain/Video'
+import { type SQLiteVideoRepository } from '../../src/contexts/mooc/courses/video/infrastructure/SQLiteVideoRepository'
+import { Container, ids } from '../../src/apps/mooc/backend/dependencyInjection/Container'
 
 let repository: SQLiteVideoRepository
 

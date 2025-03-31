@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import request from 'supertest'
 import type { Express } from 'express'
-import { type SQLiteVideoRepository } from '../../src/contexts/courses/video/infrastructure/SQLiteVideoRepository'
-import { App } from '../../src/apps/backend/app'
-import { Container, ids } from '../../src/apps/backend/dependencyInjection/Container'
+import { type SQLiteVideoRepository } from '../../src/contexts/mooc/courses/video/infrastructure/SQLiteVideoRepository'
+import { App } from '../../src/apps/mooc/backend/app'
+import { Container, ids } from '../../src/apps/mooc/backend/dependencyInjection/Container'
 
 let expressApp: Express
 let repository: SQLiteVideoRepository
