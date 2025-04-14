@@ -10,8 +10,8 @@ export const ids = {
   },
   videoReview: {
     videoReviewRepository: 'videoReview.videoReviewRepository',
-    reviewVideoSubscriber: 'videoReview.reviewVideoSubscriber',
-    deleteVideoReviewSubscriber: 'videoReview.deleteVideoReviewSubscriber',
+    updateVideoScoreOnVideoReviewCreatedSubscriber: 'videoReview.updateVideoScoreOnVideoReviewCreatedSubscriber',
+    adjustVideoScoreOnVideoReviewDeletedSubscriber: 'videoReview.adjustVideoScoreOnVideoReviewDeletedSubscriber',
     reviewVideoCommandHandler: 'videoReview.reviewVideoCommandHandler'
   },
   video: {

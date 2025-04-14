@@ -2,7 +2,7 @@ import { Sequelize, Model, type InferAttributes, type InferCreationAttributes, D
 import { Video } from '../domain/Video'
 import type { VideoRepository } from '../domain/VideoRepository'
 import type { Id } from '../../shared/domain/Id'
-import { NotFoundError } from '../../shared/infrastructure/NotFoundError'
+import { NotFoundError } from '../../shared/domain/errors/NotFoundError'
 
 class VideoModel extends Model<InferAttributes<VideoModel>, InferCreationAttributes<VideoModel>> {
   declare id: string

@@ -33,14 +33,14 @@ services:
     tags:
       - { name: 'queryHandler' }
 
-  videoReview.reviewVideoSubscriber:
-    class: ../../../../contexts/mooc/courses/video/infrastructure/ReviewVideoSubscriber
+  videoReview.updateVideoScoreOnVideoReviewCreatedSubscriber:
+    class: ../../../../contexts/mooc/courses/video/application/UpdateVideoScoreOnVideoReviewCreatedSubscriber
     arguments: ['@shared.commandBus']
     tags:
       - { name: 'eventSubscriber' }
 
-  videoReview.deleteVideoReviewSubscriber:
-    class: ../../../../contexts/mooc/courses/video/infrastructure/DeleteVideoReviewSubscriber
+  videoReview.adjustVideoScoreOnVideoReviewDeletedSubscriber:
+    class: ../../../../contexts/mooc/courses/video/application/AdjustVideoScoreOnVideoReviewDeletedSubscriber
     arguments: ['@shared.commandBus']
     tags:
       - { name: 'eventSubscriber' }

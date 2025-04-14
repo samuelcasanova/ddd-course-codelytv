@@ -1,10 +1,10 @@
 import type { CommandBus } from '../../shared/domain/CommandBus'
 import type { EventSubscriber } from '../../shared/domain/EventBus'
 import { VideoReviewCreatedEvent } from '../../shared/domain/events/VideoReviewCreatedEvent'
-import { NotFoundError } from '../../shared/infrastructure/NotFoundError'
-import { UpdateVideoScoreCommand } from '../application/UpdateVideoScoreCommand'
+import { NotFoundError } from '../../shared/domain/errors/NotFoundError'
+import { UpdateVideoScoreCommand } from './UpdateVideoScoreCommand'
 
-export class ReviewVideoSubscriber implements EventSubscriber<VideoReviewCreatedEvent> {
+export class UpdateVideoScoreOnVideoReviewCreatedSubscriber implements EventSubscriber<VideoReviewCreatedEvent> {
   eventName = VideoReviewCreatedEvent.name
 
   constructor (private readonly commandBus: CommandBus) {
